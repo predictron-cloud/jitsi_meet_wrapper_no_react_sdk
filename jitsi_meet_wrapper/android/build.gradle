@@ -19,6 +19,7 @@ rootProject.allprojects {
         google()
         mavenCentral()
         jcenter()
+        flatDir {dirs("libs")}
         // Required by jitsi
         maven {
             url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
@@ -52,6 +53,11 @@ android {
         // Required by jitsi
         minSdkVersion 24
     }
+
+    packagingOptions {
+        exclude '/lib/libwebrtc.jar'
+    }
+
 }
 
 dependencies {
