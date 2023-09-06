@@ -14,7 +14,7 @@ dependencies:
   jitsi_meet_wrapper_platform_interface:
     # To be replaced with newer version of jitsi_meet_wrapper_platform_interface released
     path: ../jitsi_meet_wrapper_platform_interface
-  jitsi_meet_wrapper_platform_interface: ^0.1.0
+  #jitsi_meet_wrapper_platform_interface: ^0.1.0
 
 
 dev_dependencies:

@@ -106,7 +106,7 @@ class JitsiMeetingOptions {
       userDisplayName: map['userDisplayName'] != null ? map['userDisplayName'] as String : null,
       userEmail: map['userEmail'] != null ? map['userEmail'] as String : null,
       userAvatarUrl: map['userAvatarUrl'] != null ? map['userAvatarUrl'] as String : null,
-      featureFlags: map['featureFlags'] != null ? Map<FeatureFlag, Object?>.from(map['featureFlags'] as Map<FeatureFlag, Object?>) : null,
+      featureFlags: map['featureFlags'] != null ? Map<String, Object?>.from(map['featureFlags'] as Map<String, Object?>) : null,
       configOverrides: map['configOverrides'] != null ? Map<String, Object?>.from(map['configOverrides'] as Map<String, Object?>) : null,
     );
   }
