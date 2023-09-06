@@ -82,6 +82,16 @@ class MethodChannelJitsiMeetWrapper extends JitsiMeetWrapperPlatformInterface {
     });
   }
 
+  @override
+  Future<void> attachListener(
+    JitsiMeetingListener listener,
+    ) async {
+    _listener = listener;
+    if (!_eventChannelIsInitialized) {
+      _initialize();
+    }
+  }
+
   void _initialize() {
     _eventChannel.receiveBroadcastStream().listen((message) {
       final data = message['data'];
