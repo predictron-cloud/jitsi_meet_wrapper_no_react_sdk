@@ -257,9 +257,9 @@ class _MeetingState extends State<Meeting> {
   }
 
   _joinMeeting() async {
-    String? serverUrl = serverText.text
+    String serverUrl = serverText.text
         .trim()
-        .isEmpty ? null : serverText.text;
+        .isEmpty ? '' : serverText.text;
 
     Map<String, Object> featureFlags = {
       'chat.enabled': false,
@@ -320,7 +320,7 @@ class _MeetingState extends State<Meeting> {
       MaterialPageRoute(
         builder: (context) {
           String? serverUrl =
-              serverText.text.trim().isEmpty ? null : serverText.text;
+              serverText.text.trim().isEmpty ? '' : serverText.text;
 
           Map<String, Object> featureFlags = {};
 

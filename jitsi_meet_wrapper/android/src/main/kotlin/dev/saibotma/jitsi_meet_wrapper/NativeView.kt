@@ -21,8 +21,6 @@ internal class NativeView(val activity: Activity, context: Context, id: Int, cre
     override fun dispose() {}
 
     init {
-
-
         val userInfo = JitsiMeetUserInfo()
         userInfo.displayName = creationParams?.get("userDisplayName")?.toString()
         userInfo.email = creationParams?.get("userEmail")?.toString()
@@ -30,17 +28,17 @@ internal class NativeView(val activity: Activity, context: Context, id: Int, cre
             userInfo.avatar = URL(creationParams?.get("userAvatarURL")?.toString())
         }
         val optionsBuilder = JitsiMeetConferenceOptions.Builder()
-        val audioMuted: Boolean = true
-        val videoMuted: Boolean = true
-        val featureFlags : HashMap<String, Boolean> = creationParams?.get("featureFlags") as HashMap<String, Boolean>
 
         optionsBuilder
                 .setServerURL(URL(creationParams?.get("serverUrl")?.toString()))
                 .setRoom(creationParams?.get("roomNameOrUrl")?.toString())
                 .setSubject(creationParams?.get("subject")?.toString())
-                .setAudioMuted(audioMuted)
-                .setVideoMuted(videoMuted)
+                .setAudioMuted(creationParams?.get("isAudioMuted") as Boolean)
+                .setVideoMuted(creationParams?.get("isVideoMuted") as Boolean)
                 .setUserInfo(userInfo)
+                .setAudioOnly(creationParams?.get("isAudioOnly") as Boolean)
+                .setToken(creationParams?.get("token")?.toString())
+
         val configOverrides : HashMap<String, Any?> = creationParams?.get("configOverrides") as HashMap<String, Any?>
         configOverrides?.forEach { (key, value) ->
             // Can only be bool, int, array of strings or string according to
@@ -56,6 +54,7 @@ internal class NativeView(val activity: Activity, context: Context, id: Int, cre
             }
         }
 
+        val featureFlags : HashMap<String, Boolean> = creationParams?.get("featureFlags") as HashMap<String, Boolean>
         if (featureFlags != null) {
             for ((k, v) in featureFlags.iterator()) {
                 optionsBuilder.setFeatureFlag(k,v)
