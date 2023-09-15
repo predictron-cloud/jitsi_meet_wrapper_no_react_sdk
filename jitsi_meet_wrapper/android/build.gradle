@@ -33,7 +33,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 28
 
     // Required by jitsi
     compileOptions {

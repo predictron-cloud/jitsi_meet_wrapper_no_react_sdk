@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jitsi_meet_wrapper/jitsi_meet.dart';
 import 'package:jitsi_meet_wrapper/jitsi_meet_wrapper.dart';
 
 import 'jitsi_meet_view.dart';
@@ -92,7 +93,60 @@ class _MeetingState extends State<Meeting> {
         appBar: AppBar(title: const Text('Jitsi Meet Wrapper Test')),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: buildMeetConfig(),
+          child: const JitsiMeetConferencing({
+            'roomNameOrUrl': 'some-some-some',
+            'serverUrl': 'https://meet.element.io',
+            'subject': 'some',
+            'token': 'some',
+            'isAudioMuted': true,
+            'isAudioOnly': false,
+            'isVideoMuted': false,
+            'userDisplayName': 'The name',
+            'userEmail': 'theMail@mail.com',
+            'userAvatarUrl': 'theMail@mail.com',
+            'featureFlags': {
+              'chat.enabled': false,
+              'prejoinpage.enabled': false,
+              'invite.enabled': false,
+              'help.enabled': false,
+              'car-mode.enabled': true,
+              'settings.enabled': false,
+              'meeting-name.enabled': false,
+              'security-options.enabled': false,
+              'tile-view.enabled': false,
+              'speakerstats.enabled': false,
+              'android.screensharing.enabled': false,
+              'live-streaming.enabled': false,
+              'video-share.enabled': false,
+              'reactions.enabled': false,
+              'raise-hand.enabled': false,
+              'pip.enabled': false,
+              //recording.enabled true
+              //audio-mute.enabled : false
+              'video-mute.enabled': false, //todo: does not work?
+            },
+            'configOverrides': {
+              'subject': 'lalalala',
+              'hideConferenceSubject': false,
+              'hideConferenceTimer': true,
+              'toolbarButtons': [
+                'camera',
+                'chat',
+                'fullscreen',
+                'hangup',
+                'microphone',
+                'noisesuppression'
+              ],
+              'buttonsWithNotifyClick': [
+                'camera',
+                'chat',
+                'fullscreen',
+                'microphone',
+                'noisesuppression',
+                {'key': 'hangup', 'preventExecution': true}
+              ]
+            }
+          }),
         ),
       ),
     );
@@ -159,7 +213,7 @@ class _MeetingState extends State<Meeting> {
               ),
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateColor.resolveWith((states) => Colors.blue),
+                MaterialStateColor.resolveWith((states) => Colors.blue),
               ),
             ),
           ),
@@ -203,23 +257,56 @@ class _MeetingState extends State<Meeting> {
   }
 
   _joinMeeting() async {
-    String? serverUrl = serverText.text.trim().isEmpty ? null : serverText.text;
+    String? serverUrl = serverText.text
+        .trim()
+        .isEmpty ? null : serverText.text;
 
-    Map<String, Object> featureFlags = {};
+    Map<String, Object> featureFlags = {
+      'chat.enabled': false,
+      'prejoinpage.enabled': false,
+      'invite.enabled': false,
+      'help.enabled': false,
+      'car-mode.enabled': true,
+      'settings.enabled': false,
+      'meeting-name.enabled': false,
+      'security-options.enabled': false,
+      //'toolbar-buttons': ["microphone", "camera", "tileview"],
+      'speakerstats.enabled': false,
+      'android.screensharing.enabled': false,
+      'live-streaming.enabled': false,
+      'toolbox.enabled': true,
+      'pip.enabled': false,
+//      'toolbox.alwaysVisible': false,
+      'video-share.enabled': false,
+      'reactions.enabled': false,
+      'raise-hand.enabled': false,
+      //recording.enabled true
+      //audio-mute.enabled : false
+      'video-mute.enabled': false, //todo: does not work?
+    };
 
     // Define meetings options here
     var options = JitsiMeetingOptions(
-      roomNameOrUrl: roomText.text,
-      serverUrl: serverUrl,
-      subject: subjectText.text,
-      token: tokenText.text,
-      isAudioMuted: isAudioMuted,
-      isAudioOnly: isAudioOnly,
-      isVideoMuted: isVideoMuted,
-      userDisplayName: userDisplayNameText.text,
-      userEmail: userEmailText.text,
-      featureFlags: featureFlags,
-    );
+        roomNameOrUrl: roomText.text,
+        serverUrl: serverUrl,
+        subject: subjectText.text,
+        token: tokenText.text,
+        isAudioMuted: isAudioMuted,
+        isAudioOnly: isAudioOnly,
+        isVideoMuted: isVideoMuted,
+        userDisplayName: userDisplayNameText.text,
+        userEmail: userEmailText.text,
+        featureFlags: featureFlags,
+        configOverrides: {
+          'subject': 'lalalala',
+          'hideConferenceSubject': false,
+          'hideConferenceTimer': true,
+          'toolbarButtons': ['help'],
+          'buttonsWithNotifyClick': [
+            'participants-pane',
+            {'key': 'hangup', 'preventExecution': true},
+          ]
+        });
 
     debugPrint("JitsiMeetingOptions: $options");
     await JitsiMeetWrapper.joinMeeting(

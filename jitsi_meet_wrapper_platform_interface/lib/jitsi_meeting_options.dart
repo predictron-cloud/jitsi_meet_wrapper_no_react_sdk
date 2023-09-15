@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 
 class JitsiMeetingOptions {
   final String roomNameOrUrl;
-  final String? serverUrl;
+  final String serverUrl;
   final String? subject;
   final String? token;
   final bool? isAudioMuted;
@@ -26,7 +26,7 @@ class JitsiMeetingOptions {
 
   JitsiMeetingOptions({
     required this.roomNameOrUrl,
-    this.serverUrl,
+    required this.serverUrl,
     this.subject,
     this.token,
     this.isAudioMuted,
