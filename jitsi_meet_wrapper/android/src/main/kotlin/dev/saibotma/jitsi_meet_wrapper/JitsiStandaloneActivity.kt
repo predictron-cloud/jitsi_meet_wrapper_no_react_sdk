@@ -12,7 +12,7 @@ class JitsiStandaloneActivity : FlutterActivity(), JitsiMeetActivityInterface {
         flutterEngine
                 .platformViewsController
                 .registry
-                .registerViewFactory("JitsiNativeViewActivity",
+                .registerViewFactory("plugins.jitsi_meet_wrapper:jitsi_meet_native_viewActivity",
                         NativeViewFactory(this))
     }
 

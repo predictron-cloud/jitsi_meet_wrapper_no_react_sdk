@@ -29,7 +29,7 @@ class JitsiMeetNativeView extends StatelessWidget {
       creationParamsCodec: const StandardMessageCodec(),
       onPlatformViewCreated: _onPlatformViewCreated,
     ) : AndroidView(
-      viewType: 'JitsiNativeView',
+      viewType: 'plugins.jitsi_meet_wrapper:jitsi_meet_native_view',
       layoutDirection: TextDirection.ltr,
       creationParams: options.toMap(),
       creationParamsCodec: const StandardMessageCodec(),

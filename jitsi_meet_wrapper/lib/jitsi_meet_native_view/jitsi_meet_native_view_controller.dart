@@ -7,12 +7,12 @@ class JitsiMeetViewController {
     required int id,
     JitsiMeetingListener? listener,
   })  : _channel = MethodChannel(
-            'plugins.jitsi_meet_wrapper/jitsi_meet_native_view_$id'),
+            'plugins.jitsi_meet_wrapper:jitsi_meet_native_view_method'),
         _listener = listener;
 
   final MethodChannel _channel;
   final EventChannel _eventChannel =
-      const EventChannel('plugins.jitsi_meet_wrapper:jitsi_meet_native_view');
+      const EventChannel('plugins.jitsi_meet_wrapper:jitsi_meet_native_view_event');
   JitsiMeetingListener? _listener;
 
   Future<void> join() async {

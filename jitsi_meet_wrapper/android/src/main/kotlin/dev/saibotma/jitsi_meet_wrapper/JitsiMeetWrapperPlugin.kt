@@ -151,7 +151,13 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         pluginBinding
                 .platformViewRegistry
-                .registerViewFactory("JitsiNativeView", NativeViewFactory(binding.activity))
+                .registerViewFactory("plugins.jitsi_meet_wrapper:jitsi_meet_native_view", NativeViewFactory(binding.activity))
+
+        methodChannel = MethodChannel(binding.binaryMessenger, "plugins.jitsi_meet_wrapper:jitsi_meet_native_view_method")
+        methodChannel.setMethodCallHandler(this)
+
+        eventChannel = EventChannel(binding.binaryMessenger, "plugins.jitsi_meet_wrapper:jitsi_meet_native_view_event")
+        eventChannel.setStreamHandler(eventStreamHandler)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {

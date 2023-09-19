@@ -16,7 +16,7 @@ class JitsiMeetConferencing extends StatelessWidget {
     // This is used in the platform side to register the view.
 
     return AndroidView(
-      viewType: 'JitsiNativeView',
+      viewType: 'plugins.jitsi_meet_wrapper:jitsi_meet_native_view',
       layoutDirection: TextDirection.ltr,
       creationParams: options,
       creationParamsCodec: const StandardMessageCodec(),
