@@ -1,58 +1,67 @@
-
 package dev.saibotma.jitsi_meet_wrapper
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
+import android.content.MutableContextWrapper
+import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import io.flutter.plugin.platform.PlatformView
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
+import org.jitsi.meet.sdk.JitsiMeetUserInfo
+import org.jitsi.meet.sdk.JitsiMeetView
 import java.net.URL
-import android.util.Log
 
-
-internal class NativeView(activity: Activity, context: Context?, id: Int, creationParams: Map<String?, Any?>?) : PlatformView {
-    private val jitsiView: RNJitsiMeetView
+internal class NativeView(val activity: Activity, context: Context, id: Int, creationParams: Map<String?, Any?>?) : PlatformView {
+    private val jitsiMeetView: JitsiMeetView
 
     override fun getView(): View {
-        return jitsiView
+        return jitsiMeetView
     }
 
-    override fun dispose() {
-        jitsiView.leave()
-    }
+    override fun dispose() {}
 
     init {
-        val userInfo = RNJitsiMeetUserInfo()
+        val userInfo = JitsiMeetUserInfo()
         userInfo.displayName = creationParams?.get("userDisplayName")?.toString()
         userInfo.email = creationParams?.get("userEmail")?.toString()
         if (creationParams?.get("userAvatarURL") != null) {
             userInfo.avatar = URL(creationParams?.get("userAvatarURL")?.toString())
         }
-        val optionsBuilder = RNJitsiMeetConferenceOptions.Builder()
-        val audioMuted: Boolean = true
-        val videoMuted: Boolean = true
-        val featureFlags : HashMap<String, Boolean> = creationParams?.get("featureFlags") as HashMap<String, Boolean>
+        val optionsBuilder = JitsiMeetConferenceOptions.Builder()
 
         optionsBuilder
-            .setServerURL(URL("https://meet.jit.si"))
-            .setRoom(creationParams?.get("room")?.toString())
-            .setSubject(creationParams?.get("subject")?.toString())
-            .setAudioMuted(audioMuted)
-            .setVideoMuted(videoMuted)
-            .setUserInfo(userInfo)
+                .setServerURL(URL(creationParams?.get("serverUrl")?.toString()))
+                .setRoom(creationParams?.get("roomNameOrUrl")?.toString())
+                .setSubject(creationParams?.get("subject")?.toString())
+                .setAudioMuted(creationParams?.get("isAudioMuted") as Boolean)
+                .setVideoMuted(creationParams?.get("isVideoMuted") as Boolean)
+                .setUserInfo(userInfo)
+                .setAudioOnly(creationParams?.get("isAudioOnly") as Boolean)
+                .setToken(creationParams?.get("token")?.toString())
 
-        if (featureFlags != null) {
-             for ((k, v) in featureFlags.iterator()) {
-                 optionsBuilder.setFeatureFlag(k,v)
+        val configOverrides : HashMap<String, Any?> = creationParams?.get("configOverrides") as HashMap<String, Any?>
+        configOverrides?.forEach { (key, value) ->
+            // Can only be bool, int, array of strings or string according to
+            // the overloads of setConfigOverride.
+            when (value) {
+                is Boolean -> optionsBuilder.setConfigOverride(key, value)
+                is Int -> optionsBuilder.setConfigOverride(key, value)
+                is Array<*> -> optionsBuilder.setConfigOverride(key, value as Array<out String>)
+                is Bundle -> optionsBuilder.setConfigOverride(key, value)
+                else -> {
+                    println("CONFIG VALUE TYPE UNKNOWN FOR "+ key + ", value.toString()");
+                    optionsBuilder.setConfigOverride(key, value.toString())}
             }
         }
 
-        val options = optionsBuilder.build()
-        val view = RNJitsiMeetView(activity)
-        view.join(options)
-
-        jitsiView = view
+        val featureFlags : HashMap<String, Boolean> = creationParams?.get("featureFlags") as HashMap<String, Boolean>
+        if (featureFlags != null) {
+            for ((k, v) in featureFlags.iterator()) {
+                optionsBuilder.setFeatureFlag(k,v)
+            }
+        }
+        println("simpleName: " + activity.javaClass.simpleName);
+        jitsiMeetView = JitsiMeetView(activity)
+        jitsiMeetView.join(optionsBuilder.build())
     }
 }
-

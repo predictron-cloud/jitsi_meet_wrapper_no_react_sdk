@@ -26,6 +26,7 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     private lateinit var eventChannel: EventChannel
     private val eventStreamHandler = JitsiMeetWrapperEventStreamHandler.instance
     private var activity: Activity? = null
+    private lateinit var pluginBinding: FlutterPlugin.FlutterPluginBinding
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         methodChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "jitsi_meet_wrapper")
@@ -33,6 +34,8 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         eventChannel = EventChannel(flutterPluginBinding.binaryMessenger, "jitsi_meet_wrapper_events")
         eventChannel.setStreamHandler(eventStreamHandler)
+
+        pluginBinding = flutterPluginBinding;
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -144,6 +147,17 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         this.activity = binding.activity
+        println("accctivity"+ this.activity!!.javaClass.simpleName)
+
+        pluginBinding
+                .platformViewRegistry
+                .registerViewFactory("plugins.jitsi_meet_wrapper:jitsi_meet_native_view", NativeViewFactory(binding.activity))
+
+        /*methodChannel = MethodChannel(binding.binaryMessenger, "plugins.jitsi_meet_wrapper:jitsi_meet_native_view_method")
+        methodChannel.setMethodCallHandler(this)
+
+        eventChannel = EventChannel(binding.binaryMessenger, "plugins.jitsi_meet_wrapper:jitsi_meet_native_view_event")
+        eventChannel.setStreamHandler(eventStreamHandler)*/
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
@@ -154,4 +168,5 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         methodChannel.setMethodCallHandler(null)
         eventChannel.setStreamHandler(null)
     }
+
 }

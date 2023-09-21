@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 
 class JitsiMeetingOptions {
   final String roomNameOrUrl;
-  final String? serverUrl;
+  final String serverUrl;
   final String? subject;
   final String? token;
   final bool? isAudioMuted;
@@ -26,7 +26,7 @@ class JitsiMeetingOptions {
 
   JitsiMeetingOptions({
     required this.roomNameOrUrl,
-    this.serverUrl,
+    required this.serverUrl,
     this.subject,
     this.token,
     this.isAudioMuted,
@@ -97,7 +97,7 @@ class JitsiMeetingOptions {
   factory JitsiMeetingOptions.fromMap(Map<String, dynamic> map) {
     return JitsiMeetingOptions(
       roomNameOrUrl: map['roomNameOrUrl'] as String,
-      serverUrl: map['serverUrl'] != null ? map['serverUrl'] as String : null,
+      serverUrl: map['serverUrl'],
       subject: map['subject'] != null ? map['subject'] as String : null,
       token: map['token'] != null ? map['token'] as String : null,
       isAudioMuted: map['isAudioMuted'] != null ? map['isAudioMuted'] as bool : null,
