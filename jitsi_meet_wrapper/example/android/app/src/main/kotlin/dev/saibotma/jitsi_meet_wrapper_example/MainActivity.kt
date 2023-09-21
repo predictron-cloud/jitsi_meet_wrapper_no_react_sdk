@@ -8,6 +8,6 @@ import io.flutter.embedding.android.FlutterFragmentActivity
 class MainActivity: FlutterFragmentActivity(), JitsiMeetActivityInterface {
 
     override fun requestPermissions(p0: Array<out String>?, p1: Int, p2: PermissionListener?) {
-        TODO("Not yet implemented")
+
     }
 }

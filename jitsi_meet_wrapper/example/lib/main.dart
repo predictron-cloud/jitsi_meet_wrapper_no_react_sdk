@@ -26,7 +26,7 @@ class Meeting extends StatefulWidget {
 }
 
 class _MeetingState extends State<Meeting> {
-  final serverText = TextEditingController(text: "https://meet.jit.si");
+  final serverText = TextEditingController(text: "https://meet.element.io");
   final roomText = TextEditingController(text: "jitsi-meet-wrapper-test-room");
   final subjectText = TextEditingController(text: "My Plugin Test Meeting");
   final tokenText = TextEditingController();
@@ -86,71 +86,6 @@ class _MeetingState extends State<Meeting> {
     onClosed: () => debugPrint("onClosed"),
   );
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Jitsi Meet Wrapper Test')),
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: const JitsiMeetConferencing({
-            'roomNameOrUrl': 'some-some-some',
-            'serverUrl': 'https://meet.element.io',
-            'subject': 'some',
-            'token': 'some',
-            'isAudioMuted': true,
-            'isAudioOnly': false,
-            'isVideoMuted': false,
-            'userDisplayName': 'The name',
-            'userEmail': 'theMail@mail.com',
-            'userAvatarUrl': 'theMail@mail.com',
-            'featureFlags': {
-              'chat.enabled': false,
-              'prejoinpage.enabled': false,
-              'invite.enabled': false,
-              'help.enabled': false,
-              'car-mode.enabled': true,
-              'settings.enabled': false,
-              'meeting-name.enabled': false,
-              'security-options.enabled': false,
-              'tile-view.enabled': false,
-              'speakerstats.enabled': false,
-              'android.screensharing.enabled': false,
-              'live-streaming.enabled': false,
-              'video-share.enabled': false,
-              'reactions.enabled': false,
-              'raise-hand.enabled': false,
-              'pip.enabled': false,
-              //recording.enabled true
-              //audio-mute.enabled : false
-              'video-mute.enabled': false, //todo: does not work?
-            },
-            'configOverrides': {
-              'subject': 'lalalala',
-              'hideConferenceSubject': false,
-              'hideConferenceTimer': true,
-              'toolbarButtons': [
-                'camera',
-                'chat',
-                'fullscreen',
-                'hangup',
-                'microphone',
-                'noisesuppression'
-              ],
-              'buttonsWithNotifyClick': [
-                'camera',
-                'chat',
-                'fullscreen',
-                'microphone',
-                'noisesuppression',
-                {'key': 'hangup', 'preventExecution': true}
-              ]
-            }
-          }),
-        ),
-      ),
-    );
-  }
 
   Widget buildMeetConfig() {
     return SingleChildScrollView(
@@ -217,7 +152,7 @@ class _MeetingState extends State<Meeting> {
               ),
             ),
           ),
-          SizedBox(
+/*          SizedBox(
             height: 64.0,
             width: double.maxFinite,
             child: ElevatedButton(
@@ -231,7 +166,7 @@ class _MeetingState extends State<Meeting> {
                     MaterialStateColor.resolveWith((states) => Colors.blue),
               ),
             ),
-          ),
+          ),*/
           const SizedBox(height: 48.0),
         ],
       ),
@@ -275,7 +210,7 @@ class _MeetingState extends State<Meeting> {
       'android.screensharing.enabled': false,
       'live-streaming.enabled': false,
       'toolbox.enabled': true,
-      'pip.enabled': false,
+      'pip.enabled': true,
 //      'toolbox.alwaysVisible': false,
       'video-share.enabled': false,
       'reactions.enabled': false,
@@ -315,7 +250,7 @@ class _MeetingState extends State<Meeting> {
     );
   }
 
-  _openJitsiMeetAsAWidget(BuildContext context) {
+  /* _openJitsiMeetAsAWidget(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) {
@@ -344,7 +279,7 @@ class _MeetingState extends State<Meeting> {
         },
       ),
     );
-  }
+  }*/
 
   Widget _buildTextField({
     required String labelText,
@@ -359,4 +294,71 @@ class _MeetingState extends State<Meeting> {
           hintText: hintText),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Jitsi Meet Wrapper Test')),
+        body: buildMeetConfig() /*Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: const JitsiMeetConferencing({
+            'roomNameOrUrl': 'some-some-some',
+            'serverUrl': 'https://meet.element.io',
+            'subject': 'some',
+            'token': 'some',
+            'isAudioMuted': true,
+            'isAudioOnly': false,
+            'isVideoMuted': false,
+            'userDisplayName': 'The name',
+            'userEmail': 'theMail@mail.com',
+            'userAvatarUrl': 'theMail@mail.com',
+            'featureFlags': {
+              'chat.enabled': false,
+              'prejoinpage.enabled': false,
+              'invite.enabled': false,
+              'help.enabled': false,
+              'car-mode.enabled': true,
+              'settings.enabled': false,
+              'meeting-name.enabled': false,
+              'security-options.enabled': false,
+              'tile-view.enabled': false,
+              'speakerstats.enabled': false,
+              'android.screensharing.enabled': false,
+              'live-streaming.enabled': false,
+              'video-share.enabled': false,
+              'reactions.enabled': false,
+              'raise-hand.enabled': false,
+              'pip.enabled': false,
+              //recording.enabled true
+              //audio-mute.enabled : false
+              'video-mute.enabled': false, //todo: does not work?
+            },
+            'configOverrides': {
+              'subject': 'lalalala',
+              'hideConferenceSubject': false,
+              'hideConferenceTimer': true,
+              'toolbarButtons': [
+                'camera',
+                'chat',
+                'fullscreen',
+                'hangup',
+                'microphone',
+                'noisesuppression'
+              ],
+              'buttonsWithNotifyClick': [
+                'camera',
+                'chat',
+                'fullscreen',
+                'microphone',
+                'noisesuppression',
+                {'key': 'hangup', 'preventExecution': true}
+              ]
+            }
+          }),*/
+        ),
+      );
+  }
+
 }
+
