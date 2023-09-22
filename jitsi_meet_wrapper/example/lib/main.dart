@@ -98,20 +98,31 @@ class _MeetingState extends State<Meeting> {
             onChanged: _onVideoMutedChanged,
           ),
           const Divider(height: 48.0, thickness: 2.0),
-          SizedBox(
-            height: 64.0,
-            width: double.maxFinite,
-            child: ElevatedButton(
-              onPressed: () => _joinMeeting(),
-              child: const Text(
-                "Join Meeting",
-                style: TextStyle(color: Colors.white),
+          Column(
+            children: [
+              ElevatedButton(
+                onPressed: () => _joinMeeting(),
+                child: const Text(
+                  "Join Meeting",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateColor.resolveWith((states) => Colors.blue),
+                ),
               ),
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateColor.resolveWith((states) => Colors.blue),
+              ElevatedButton(
+                onPressed: () => _onAudioMutedChanged(true),
+                child: const Text(
+                  "Hang up",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateColor.resolveWith((states) => Colors.blue),
+                ),
               ),
-            ),
+            ],
           ),
           const SizedBox(height: 48.0),
         ],
@@ -126,6 +137,7 @@ class _MeetingState extends State<Meeting> {
   }
 
   _onAudioMutedChanged(bool? value) {
+    print('audio!!!!');
     setState(() {
       isAudioMuted = value!;
     });
@@ -140,7 +152,28 @@ class _MeetingState extends State<Meeting> {
   _joinMeeting() async {
     String? serverUrl = serverText.text.trim().isEmpty ? null : serverText.text;
 
-    Map<String, Object> featureFlags = {};
+    Map<String, Object> featureFlags =  {
+      'chat.enabled': false,
+      'prejoinpage.enabled': false,
+      'invite.enabled': false,
+      'help.enabled': false,
+      'car-mode.enabled': false,
+      'settings.enabled': false,
+      'meeting-name.enabled': false,
+      'security-options.enabled': false,
+      'tile-view.enabled': false,
+      'toolbox.enabled': false,
+      'speakerstats.enabled': false,
+      'android.screensharing.enabled': false,
+      'live-streaming.enabled': false,
+      'video-share.enabled': false,
+      'reactions.enabled': false,
+      'raise-hand.enabled': false,
+      'pip.enabled': true,
+      //recording.enabled true
+      //audio-mute.enabled : false
+      'video-mute.enabled': false, //todo: does not work?
+    };
 
     // Define meetings options here
     var options = JitsiMeetingOptions(

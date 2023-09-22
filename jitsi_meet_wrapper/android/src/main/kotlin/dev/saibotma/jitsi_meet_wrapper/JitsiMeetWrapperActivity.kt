@@ -1,19 +1,38 @@
 package dev.saibotma.jitsi_meet_wrapper
 
 import android.app.Activity
+import android.app.PendingIntent
+import android.app.PictureInPictureParams
+import android.app.RemoteAction
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Bundle
+import android.util.Rational
+import android.view.View
+import androidx.lifecycle.ViewTreeLifecycleOwner
+import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.savedstate.ViewTreeSavedStateRegistryOwner
 import org.jitsi.meet.sdk.BroadcastEvent
 import org.jitsi.meet.sdk.JitsiMeetActivity
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
-import java.util.HashMap
+import android.R
+
+import android.graphics.Rect
+
+import android.view.MotionEvent
 
 
-class JitsiMeetWrapperActivity : JitsiMeetActivity() {
+
+
+
+class JitsiMeetWrapperActivity : CustomJitsiMeetActivity() {
     private val eventStreamHandler = JitsiMeetWrapperEventStreamHandler.instance
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -37,6 +56,19 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         super.onCreate(savedInstanceState)
         registerForBroadcastMessages()
         eventStreamHandler.onOpened()
+
+        // Set as a translucent activity
+        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window.decorView.setBackgroundResource(android.R.color.transparent)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        // Capture any touches not inside your RelativeLayout (overlay_container)
+        val rect = Rect()
+        jitsiView.getGlobalVisibleRect(rect)
+        return if (!rect.contains(event.getRawX().toInt(), event.getRawY().toInt())) {
+            false // Do not consume the touch
+        } else super.onTouchEvent(event)
     }
 
     private fun registerForBroadcastMessages() {
