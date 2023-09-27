@@ -1,10 +1,7 @@
 package dev.saibotma.jitsi_meet_wrapper
 
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import androidx.annotation.NonNull
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
@@ -40,6 +37,7 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "joinMeeting" -> joinMeeting(call, result)
             "setAudioMuted" -> setAudioMuted(call, result)
             "hangUp" -> hangUp(call, result)
+            "pip" -> pip(call, result)
             else -> result.notImplemented()
         }
     }
@@ -51,6 +49,16 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
 
         result.success("Successfully set audio muted to: $isMuted")
+    }
+
+    private fun pip(call: MethodCall, result: Result) {
+        val enabled = call.argument<Boolean>("enabled") ?: false
+
+        val muteBroadcastIntent = Intent("org.jitsi.meet.PIP")
+        muteBroadcastIntent.putExtra("muted", enabled)
+        LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
+
+        result.success("Successfully set audio muted to: $enabled")
     }
 
     private fun hangUp(call: MethodCall, result: Result) {

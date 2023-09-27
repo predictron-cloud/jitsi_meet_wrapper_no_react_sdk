@@ -1,29 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/transparent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:maxHeight="450dp"
+    android:layout_height="450dp">
 
-    <View
-        android:id="@+id/top_space"
-        android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/transparent" />
 
-    <View
-        android:id="@+id/bottom_space"
-        android:layout_width="match_parent"
-        android:layout_height="200px"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/transparent" />
 
         <org.jitsi.meet.sdk.JitsiMeetView
             android:id="@+id/jitsiView"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_above="@id/bottom_space"
-            android:layout_below="@id/top_space"
-            android:background="@android:color/black" />
+            android:layout_height="match_parent" />
 
 </RelativeLayout>

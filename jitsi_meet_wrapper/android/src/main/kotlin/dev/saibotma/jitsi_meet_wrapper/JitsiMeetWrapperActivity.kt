@@ -54,21 +54,49 @@ class JitsiMeetWrapperActivity : CustomJitsiMeetActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        println("some 43543654654");
         registerForBroadcastMessages()
         eventStreamHandler.onOpened()
 
         // Set as a translucent activity
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         window.decorView.setBackgroundResource(android.R.color.transparent)
+        getJitsiView().setOnTouchListener { v, event ->
+            println("JitsiMeetView touched")
+            false // Return false to not consume the event
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         // Capture any touches not inside your RelativeLayout (overlay_container)
         val rect = Rect()
+        print("some")
         jitsiView.getGlobalVisibleRect(rect)
         return if (!rect.contains(event.getRawX().toInt(), event.getRawY().toInt())) {
+            print("some 1234")
             false // Do not consume the touch
         } else super.onTouchEvent(event)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        print("some 3213213")
+        return if (isInsideView(jitsiView, ev)) {
+            print("some 321sdfds")
+            super.dispatchTouchEvent(ev)
+        } else {
+            print("some 3213sdfdsf3")
+            // Return false to allow the event to propagate to underlying views
+            false
+        }
+    }
+
+    private fun isInsideView(view: View, ev: MotionEvent): Boolean {
+        val viewLocation = IntArray(2)
+        view.getLocationOnScreen(viewLocation)
+        return ev.rawX > viewLocation[0] &&
+                ev.rawX < viewLocation[0] + view.width &&
+                ev.rawY > viewLocation[1] &&
+                ev.rawY < viewLocation[1] + view.height
     }
 
     private fun registerForBroadcastMessages() {

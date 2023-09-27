@@ -23,7 +23,7 @@ class Meeting extends StatefulWidget {
 }
 
 class _MeetingState extends State<Meeting> {
-  final serverText = TextEditingController();
+  final serverText = TextEditingController(text: 'https://meet.element.io');
   final roomText = TextEditingController(text: "jitsi-meet-wrapper-test-room");
   final subjectText = TextEditingController(text: "My Plugin Test Meeting");
   final tokenText = TextEditingController();
@@ -33,7 +33,7 @@ class _MeetingState extends State<Meeting> {
 
   bool isAudioMuted = true;
   bool isAudioOnly = false;
-  bool isVideoMuted = true;
+  bool isVideoMuted = false;
 
   @override
   Widget build(BuildContext context) {
