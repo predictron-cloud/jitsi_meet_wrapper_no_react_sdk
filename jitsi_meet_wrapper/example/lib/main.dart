@@ -122,6 +122,17 @@ class _MeetingState extends State<Meeting> {
                   MaterialStateColor.resolveWith((states) => Colors.blue),
                 ),
               ),
+              ElevatedButton(
+                onPressed: () => _onAudioMutedChanged(false),
+                child: const Text(
+                  "Exit PIP",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateColor.resolveWith((states) => Colors.blue),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 48.0),
@@ -137,7 +148,9 @@ class _MeetingState extends State<Meeting> {
   }
 
   _onAudioMutedChanged(bool? value) {
+    JitsiMeetWrapper.pip(value!);
     print('audio!!!!');
+
     setState(() {
       isAudioMuted = value!;
     });

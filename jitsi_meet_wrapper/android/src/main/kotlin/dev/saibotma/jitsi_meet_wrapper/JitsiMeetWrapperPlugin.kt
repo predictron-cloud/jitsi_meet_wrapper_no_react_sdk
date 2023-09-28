@@ -55,10 +55,9 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         val enabled = call.argument<Boolean>("enabled") ?: false
 
         val muteBroadcastIntent = Intent("org.jitsi.meet.PIP")
-        muteBroadcastIntent.putExtra("muted", enabled)
+        muteBroadcastIntent.putExtra("enabled", enabled)
         LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
-
-        result.success("Successfully set audio muted to: $enabled")
+        result.success("Successfully set pip mode: $enabled")
     }
 
     private fun hangUp(call: MethodCall, result: Result) {

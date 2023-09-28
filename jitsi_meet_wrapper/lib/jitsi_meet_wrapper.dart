@@ -35,4 +35,8 @@ class JitsiMeetWrapper {
   static Future<JitsiMeetingResponse> hangUp() async {
     return await JitsiMeetWrapperPlatformInterface.instance.hangUp();
   }
+
+  static Future<JitsiMeetingResponse> pip(bool enabled) async {
+    return await JitsiMeetWrapperPlatformInterface.instance.pip(enabled);
+  }
 }

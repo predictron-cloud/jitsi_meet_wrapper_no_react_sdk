@@ -1,41 +1,29 @@
 package dev.saibotma.jitsi_meet_wrapper
 
 import android.app.Activity
-import android.app.PendingIntent
-import android.app.PictureInPictureParams
-import android.app.RemoteAction
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Icon
-import android.os.Build
 import android.os.Bundle
-import android.util.Rational
+import android.view.MotionEvent
 import android.view.View
-import androidx.lifecycle.ViewTreeLifecycleOwner
-import androidx.lifecycle.ViewTreeViewModelStoreOwner
+import android.view.Window
+import android.view.WindowManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.savedstate.ViewTreeSavedStateRegistryOwner
 import org.jitsi.meet.sdk.BroadcastEvent
 import org.jitsi.meet.sdk.JitsiMeetActivity
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
-import android.R
-
-import android.graphics.Rect
-
-import android.view.MotionEvent
 
 
-
-
-
-class JitsiMeetWrapperActivity : CustomJitsiMeetActivity() {
+class JitsiMeetWrapperActivity : JitsiMeetActivity() {
     private val eventStreamHandler = JitsiMeetWrapperEventStreamHandler.instance
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            println("recieved thiiis:" + intent.toString());
             this@JitsiMeetWrapperActivity.onBroadcastReceived(intent)
         }
     }
@@ -53,18 +41,17 @@ class JitsiMeetWrapperActivity : CustomJitsiMeetActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val window = this.window
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
+        window.requestFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
-        println("some 43543654654");
         registerForBroadcastMessages()
         eventStreamHandler.onOpened()
 
         // Set as a translucent activity
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         window.decorView.setBackgroundResource(android.R.color.transparent)
-        getJitsiView().setOnTouchListener { v, event ->
-            println("JitsiMeetView touched")
-            false // Return false to not consume the event
-        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -104,11 +91,38 @@ class JitsiMeetWrapperActivity : CustomJitsiMeetActivity() {
         for (eventType in BroadcastEvent.Type.values()) {
             intentFilter.addAction(eventType.action)
         }
+        intentFilter.addAction("org.jitsi.meet.PIP");
         LocalBroadcastManager.getInstance(this).registerReceiver(this.broadcastReceiver, intentFilter)
     }
 
     private fun onBroadcastReceived(intent: Intent?) {
         if (intent != null) {
+            if (intent!!.getAction() == "org.jitsi.meet.PIP") {
+                val enabled = intent.getExtras()!!.getBoolean("enabled");
+                if(enabled) {
+                   // enterPictureInPictureMode()
+                    var layoutParams = window.getAttributes();
+
+                    // Here, you can change the width and height to your desired values
+                    layoutParams.width = 100;  // in pixels
+                    layoutParams.height = 100; // in pixels
+
+                    window.setAttributes(layoutParams);
+
+                } else {
+                    var layoutParams = window.getAttributes();
+
+                    // Here, you can change the width and height to your desired values
+                    layoutParams.width = 800;  // in pixels
+                    layoutParams.height = 1200; // in pixels
+
+                    window.setAttributes(layoutParams);
+                  /*  val intent = Intent(this, JitsiMeetWrapperActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)*/
+                }
+                return
+            }
             val event = BroadcastEvent(intent)
             val data = event.data
             when (event.type!!) {
