@@ -33,7 +33,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 31
 
     // Required by jitsi
     compileOptions {
@@ -65,7 +65,7 @@ dependencies {
     // From: https://github.com/jitsi/jitsi-maven-repository/tree/master/releases/org/jitsi/react/jitsi-meet-sdk
     implementation ('org.jitsi.react:jitsi-meet-sdk:8.1.2') {
     transitive = true 
-   // exclude group: 'com.facebook.react', module: 'react-native-webrtc'
+    exclude group: 'com.facebook.react', module: 'react-native-webrtc'
     }
     // Changelog: https://github.com/jitsi/jitsi-meet-release-notes/blob/master/CHANGELOG-MOBILE-SDKS.md
 }
