@@ -92,35 +92,21 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
             intentFilter.addAction(eventType.action)
         }
         intentFilter.addAction("org.jitsi.meet.PIP");
+        intentFilter.addAction("org.jitsi.meet.setSize");
         LocalBroadcastManager.getInstance(this).registerReceiver(this.broadcastReceiver, intentFilter)
     }
 
     private fun onBroadcastReceived(intent: Intent?) {
         if (intent != null) {
-            if (intent!!.getAction() == "org.jitsi.meet.PIP") {
-                val enabled = intent.getExtras()!!.getBoolean("enabled");
-                if(enabled) {
-                   // enterPictureInPictureMode()
-                    var layoutParams = window.getAttributes();
-
-                    // Here, you can change the width and height to your desired values
-                    layoutParams.width = 100;  // in pixels
-                    layoutParams.height = 100; // in pixels
-
-                    window.setAttributes(layoutParams);
-
-                } else {
-                    var layoutParams = window.getAttributes();
-
-                    // Here, you can change the width and height to your desired values
-                    layoutParams.width = 800;  // in pixels
-                    layoutParams.height = 1200; // in pixels
-
-                    window.setAttributes(layoutParams);
-                  /*  val intent = Intent(this, JitsiMeetWrapperActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)*/
-                }
+            // enterPictureInPictureMode()
+            if (intent!!.getAction() == "org.jitsi.meet.setSize") {
+                val width = intent.getExtras()!!.getInt("width");
+                val height = intent.getExtras()!!.getInt("height");
+                var layoutParams = window.getAttributes();
+                // Here, you can change the width and height to your desired values
+                layoutParams.width = width;  // in pixels
+                layoutParams.height = height; // in pixels
+                window.setAttributes(layoutParams);
                 return
             }
             val event = BroadcastEvent(intent)

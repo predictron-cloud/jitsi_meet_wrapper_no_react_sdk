@@ -100,6 +100,25 @@ class MethodChannelJitsiMeetWrapper extends JitsiMeetWrapperPlatformInterface {
     });
   }
 
+  @override
+  Future<JitsiMeetingResponse> setSize(int width, int height) async {
+    Map<String, dynamic> _options = {
+      'width': width,
+      'height': height,
+    };
+    return await _methodChannel
+        .invokeMethod<String>('setSize', _options)
+        .then((message) {
+      return JitsiMeetingResponse(isSuccess: true, message: message);
+    }).catchError((error) {
+      return JitsiMeetingResponse(
+        isSuccess: false,
+        message: error.toString(),
+        error: error,
+      );
+    });
+  }
+
   void _initialize() {
     _eventChannel.receiveBroadcastStream().listen((message) {
       final data = message['data'];

@@ -39,4 +39,8 @@ class JitsiMeetWrapper {
   static Future<JitsiMeetingResponse> pip(bool enabled) async {
     return await JitsiMeetWrapperPlatformInterface.instance.pip(enabled);
   }
+
+  static Future<JitsiMeetingResponse> setSize(int width, int height) async {
+    return await JitsiMeetWrapperPlatformInterface.instance.setSize(width, height);
+  }
 }

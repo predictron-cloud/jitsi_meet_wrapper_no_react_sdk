@@ -38,6 +38,7 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "setAudioMuted" -> setAudioMuted(call, result)
             "hangUp" -> hangUp(call, result)
             "pip" -> pip(call, result)
+            "setSize" -> setSize(call, result)
             else -> result.notImplemented()
         }
     }
@@ -58,6 +59,17 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         muteBroadcastIntent.putExtra("enabled", enabled)
         LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
         result.success("Successfully set pip mode: $enabled")
+    }
+
+    private fun setSize(call: MethodCall, result: Result) {
+        val width = call.argument<Int>("width") ?: 0
+        val height = call.argument<Int>("height") ?: 0
+
+        val muteBroadcastIntent = Intent("org.jitsi.meet.setSize")
+        muteBroadcastIntent.putExtra("width", width)
+        muteBroadcastIntent.putExtra("height", height)
+        LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
+        result.success("Successfully set size")
     }
 
     private fun hangUp(call: MethodCall, result: Result) {

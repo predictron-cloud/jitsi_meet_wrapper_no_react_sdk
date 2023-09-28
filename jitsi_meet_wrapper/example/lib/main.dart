@@ -148,7 +148,11 @@ class _MeetingState extends State<Meeting> {
   }
 
   _onAudioMutedChanged(bool? value) {
-    JitsiMeetWrapper.pip(value!);
+    if(value == true) {
+      JitsiMeetWrapper.setSize(100, 200);
+    } else {
+      JitsiMeetWrapper.setSize(800, 1200);
+    }
     print('audio!!!!');
 
     setState(() {
