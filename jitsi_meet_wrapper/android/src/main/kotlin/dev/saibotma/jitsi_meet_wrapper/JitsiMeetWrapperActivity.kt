@@ -1,6 +1,7 @@
 package dev.saibotma.jitsi_meet_wrapper
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -17,13 +18,16 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.jitsi.meet.sdk.BroadcastEvent
 import org.jitsi.meet.sdk.JitsiMeetActivity
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
+import android.view.Gravity
+
+
+
 
 
 class JitsiMeetWrapperActivity : JitsiMeetActivity() {
     private val eventStreamHandler = JitsiMeetWrapperEventStreamHandler.instance
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            println("recieved thiiis:" + intent.toString());
             this@JitsiMeetWrapperActivity.onBroadcastReceived(intent)
         }
     }
@@ -44,8 +48,11 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         val window = this.window
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
-        window.requestFeature(Window.FEATURE_NO_TITLE)
+        window.requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY)
+        setTitle("")
         super.onCreate(savedInstanceState)
+        setTitle("")
+        supportActionBar?.hide()
         registerForBroadcastMessages()
         eventStreamHandler.onOpened()
 
@@ -54,36 +61,8 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         window.decorView.setBackgroundResource(android.R.color.transparent)
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        // Capture any touches not inside your RelativeLayout (overlay_container)
-        val rect = Rect()
-        print("some")
-        jitsiView.getGlobalVisibleRect(rect)
-        return if (!rect.contains(event.getRawX().toInt(), event.getRawY().toInt())) {
-            print("some 1234")
-            false // Do not consume the touch
-        } else super.onTouchEvent(event)
-    }
-
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        print("some 3213213")
-        return if (isInsideView(jitsiView, ev)) {
-            print("some 321sdfds")
-            super.dispatchTouchEvent(ev)
-        } else {
-            print("some 3213sdfdsf3")
-            // Return false to allow the event to propagate to underlying views
-            false
-        }
-    }
-
-    private fun isInsideView(view: View, ev: MotionEvent): Boolean {
-        val viewLocation = IntArray(2)
-        view.getLocationOnScreen(viewLocation)
-        return ev.rawX > viewLocation[0] &&
-                ev.rawX < viewLocation[0] + view.width &&
-                ev.rawY > viewLocation[1] &&
-                ev.rawY < viewLocation[1] + view.height
+    override fun onBackPressed() {
+        print("onBackPresseddddd")
     }
 
     private fun registerForBroadcastMessages() {
@@ -92,20 +71,29 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
             intentFilter.addAction(eventType.action)
         }
         intentFilter.addAction("org.jitsi.meet.PIP");
-        intentFilter.addAction("org.jitsi.meet.setSize");
+        intentFilter.addAction("org.jitsi.meet.setSizeAndPosition");
         LocalBroadcastManager.getInstance(this).registerReceiver(this.broadcastReceiver, intentFilter)
     }
 
     private fun onBroadcastReceived(intent: Intent?) {
         if (intent != null) {
             // enterPictureInPictureMode()
-            if (intent!!.getAction() == "org.jitsi.meet.setSize") {
+            if (intent!!.getAction() == "org.jitsi.meet.setSizeAndPosition") {
                 val width = intent.getExtras()!!.getInt("width");
                 val height = intent.getExtras()!!.getInt("height");
+                val left = intent.getExtras()!!.getInt("left");
+                val top = intent.getExtras()!!.getInt("top");
                 var layoutParams = window.getAttributes();
                 // Here, you can change the width and height to your desired values
                 layoutParams.width = width;  // in pixels
                 layoutParams.height = height; // in pixels
+
+                if (left != null && top != null) {
+                    layoutParams.gravity = Gravity.TOP or Gravity.LEFT
+                    layoutParams.x = left
+                    layoutParams.y = top
+                }
+
                 window.setAttributes(layoutParams);
                 return
             }

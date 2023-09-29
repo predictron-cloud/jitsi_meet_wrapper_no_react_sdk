@@ -101,13 +101,15 @@ class MethodChannelJitsiMeetWrapper extends JitsiMeetWrapperPlatformInterface {
   }
 
   @override
-  Future<JitsiMeetingResponse> setSize(int width, int height) async {
+  Future<JitsiMeetingResponse> setSizeAndPosition(int width, int height, int left, int top) async {
     Map<String, dynamic> _options = {
       'width': width,
       'height': height,
+      'left': left,
+      'top': top,
     };
     return await _methodChannel
-        .invokeMethod<String>('setSize', _options)
+        .invokeMethod<String>('setSizeAndPosition', _options)
         .then((message) {
       return JitsiMeetingResponse(isSuccess: true, message: message);
     }).catchError((error) {

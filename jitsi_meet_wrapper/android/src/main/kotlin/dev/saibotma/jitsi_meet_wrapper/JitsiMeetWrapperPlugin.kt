@@ -38,7 +38,7 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "setAudioMuted" -> setAudioMuted(call, result)
             "hangUp" -> hangUp(call, result)
             "pip" -> pip(call, result)
-            "setSize" -> setSize(call, result)
+            "setSizeAndPosition" -> setSizeAndPosition(call, result)
             else -> result.notImplemented()
         }
     }
@@ -61,15 +61,23 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         result.success("Successfully set pip mode: $enabled")
     }
 
-    private fun setSize(call: MethodCall, result: Result) {
+    private fun setSizeAndPosition(call: MethodCall, result: Result) {
         val width = call.argument<Int>("width") ?: 0
         val height = call.argument<Int>("height") ?: 0
+        val top = call.argument<Int>("top")
+        val left = call.argument<Int>("left")
 
-        val muteBroadcastIntent = Intent("org.jitsi.meet.setSize")
+        val muteBroadcastIntent = Intent("org.jitsi.meet.setSizeAndPosition")
         muteBroadcastIntent.putExtra("width", width)
         muteBroadcastIntent.putExtra("height", height)
+        if (top != null) {
+            muteBroadcastIntent.putExtra("top", top!!)
+        }
+        if (left != null) {
+            muteBroadcastIntent.putExtra("left", left!!)
+        }
         LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
-        result.success("Successfully set size")
+        result.success("Successfully set size and position")
     }
 
     private fun hangUp(call: MethodCall, result: Result) {
