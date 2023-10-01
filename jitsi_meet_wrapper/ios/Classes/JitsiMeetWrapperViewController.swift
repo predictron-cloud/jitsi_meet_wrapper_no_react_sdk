@@ -35,6 +35,10 @@ class JitsiMeetWrapperViewController: UIViewController {
         cleanUp()
 
         sourceJitsiMeetView = JitsiMeetView()
+
+        jitsiMeetView.translatesAutoresizingMaskIntoConstraints = true
+        jitsiMeetView.removeConstraints(jitsiMeetView.constraints)
+
         // Need to wrap the jitsi view in another view that absorbs all the pointer events
         // because of a flutter bug: https://github.com/flutter/flutter/issues/14720
         let jitsiMeetView = AbsorbPointersView()
@@ -48,6 +52,9 @@ class JitsiMeetWrapperViewController: UIViewController {
         sourceJitsiMeetView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         jitsiMeetView.frame = CGRect(x: 100, y: 120, width: 400, height: 600)
+
+        sourceJitsiMeetView!.frame = CGRect(x: 0, y: 0, width: 200, height: 300)
+
         view.addSubview(jitsiMeetView)
 
         sourceJitsiMeetView!.delegate = self
@@ -59,12 +66,18 @@ class JitsiMeetWrapperViewController: UIViewController {
         // Enable jitsimeet view to be a view that can be displayed
         // on top of all the things, and let the coordinator to manage
         // the view state and interactions
-        pipViewCoordinator = PiPViewCoordinator(withView: jitsiMeetView)
-        pipViewCoordinator?.configureAsStickyView(withParentView: view)
+        //pipViewCoordinator = PiPViewCoordinator(withView: jitsiMeetView)
+        //pipViewCoordinator?.configureAsStickyView(withParentView: view)
 
         // animate in
         jitsiMeetView.alpha = 0
         pipViewCoordinator?.show()
+
+        print("Frame after setting:", jitsiMeetView.frame)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            print("Frame after 1 second:", jitsiMeetView.frame)
+        }
+
     }
 
     override func viewWillTransition(to size: CGSize,
