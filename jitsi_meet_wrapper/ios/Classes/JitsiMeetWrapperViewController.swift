@@ -47,8 +47,7 @@ class JitsiMeetWrapperViewController: UIViewController {
         // From: https://stackoverflow.com/a/45860445/6172447
         //sourceJitsiMeetView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        let halfHeight = view.bounds.height / 2
-        jitsiMeetView.frame = CGRect(x: 0, y: halfHeight, width: view.bounds.width, height: halfHeight)
+        jitsiMeetView.frame = CGRect(x: 100, y: 120, width: view.bounds.width - 200, height: view.bounds.height - 400)
         view.addSubview(jitsiMeetView)
 
         sourceJitsiMeetView!.delegate = self
