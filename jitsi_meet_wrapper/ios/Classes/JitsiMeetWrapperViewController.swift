@@ -46,9 +46,9 @@ class JitsiMeetWrapperViewController: UIViewController {
 
         // Make the jitsi view redraw when orientation changes.
         // From: https://stackoverflow.com/a/45860445/6172447
-        sourceJitsiMeetView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        //sourceJitsiMeetView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        sourceJitsiMeetView!.frame = CGRect(x: 20, y: 40, width: 100, height: 100)
+        sourceJitsiMeetView!.frame = CGRect(x: 20, y: 40, width: 250, height: 400)
 
         print("Frame width:", view.bounds.width)
         print("Frame height:", view.bounds.height)
