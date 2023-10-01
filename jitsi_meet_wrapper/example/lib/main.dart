@@ -112,9 +112,20 @@ class _MeetingState extends State<Meeting> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () => _onAudioMutedChanged(true),
+                onPressed: () => JitsiMeetWrapper.hangUp(),
                 child: const Text(
                   "Hang up",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateColor.resolveWith((states) => Colors.blue),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => _onAudioMutedChanged(true),
+                child: const Text(
+                  "PIP",
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ButtonStyle(
@@ -149,9 +160,9 @@ class _MeetingState extends State<Meeting> {
 
   _onAudioMutedChanged(bool? value) {
     if(value == true) {
-      JitsiMeetWrapper.setSizeAndPosition(100, 200, 20, 500);
+      JitsiMeetWrapper.setSizeAndPosition(100, 200, 200000, 3000000);
     } else {
-      JitsiMeetWrapper.setSizeAndPosition(800, 1200, 150, 200);
+      JitsiMeetWrapper.setSizeAndPosition(700, 700, 150, 100);
     }
     print('audio!!!!');
 
@@ -257,6 +268,7 @@ class _MeetingState extends State<Meeting> {
         onClosed: () => debugPrint("onClosed"),
       ),
     );
+    JitsiMeetWrapper.setSizeAndPosition(300, 500, 20000, 30000);
   }
 
   Widget _buildTextField({
@@ -265,6 +277,8 @@ class _MeetingState extends State<Meeting> {
     String? hintText,
   }) {
     return TextField(
+      onTap: () => JitsiMeetWrapper.pip(true),
+      onEditingComplete: () => JitsiMeetWrapper.pip(false),
       controller: controller,
       decoration: InputDecoration(
           border: const OutlineInputBorder(),

@@ -43,7 +43,11 @@ abstract class JitsiMeetWrapperPlatformInterface extends PlatformInterface {
     throw UnimplementedError('pip has not been implemented.');
   }
 
-  Future<JitsiMeetingResponse> setSizeAndPosition(int width, int height, int left, int top) async {
+  Future<JitsiMeetingResponse> setSizeAndPosition(int width, int height, int right, int bottom) async {
+    throw UnimplementedError('setSizeAndPosition has not been implemented.');
+  }
+
+  Future<JitsiMeetingResponse> toggleKeyboard(bool enabled) async {
     throw UnimplementedError('setSizeAndPosition has not been implemented.');
   }
 

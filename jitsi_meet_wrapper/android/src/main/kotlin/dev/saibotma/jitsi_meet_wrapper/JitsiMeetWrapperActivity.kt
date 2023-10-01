@@ -1,27 +1,25 @@
 package dev.saibotma.jitsi_meet_wrapper
 
 import android.app.Activity
-import android.app.Dialog
+import android.app.PictureInPictureParams
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MotionEvent
-import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.jitsi.meet.sdk.BroadcastEvent
 import org.jitsi.meet.sdk.JitsiMeetActivity
 import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
-import android.view.Gravity
-
-
-
 
 
 class JitsiMeetWrapperActivity : JitsiMeetActivity() {
@@ -49,16 +47,30 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
         window.requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // Add the STATUS_BAR flag to show the status bar
+        window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setTitle("")
         super.onCreate(savedInstanceState)
         setTitle("")
         supportActionBar?.hide()
         registerForBroadcastMessages()
         eventStreamHandler.onOpened()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // Add the STATUS_BAR flag to show the status bar
+        window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         // Set as a translucent activity
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         window.decorView.setBackgroundResource(android.R.color.transparent)
+    }
+
+    private fun exitFullscreenMode() {
+        val window: Window = getWindow()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+
     }
 
     override fun onBackPressed() {
@@ -72,7 +84,32 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         }
         intentFilter.addAction("org.jitsi.meet.PIP");
         intentFilter.addAction("org.jitsi.meet.setSizeAndPosition");
+        intentFilter.addAction("org.jitsi.meet.toggleKeyboard");
         LocalBroadcastManager.getInstance(this).registerReceiver(this.broadcastReceiver, intentFilter)
+    }
+
+    fun toggleKeyboard(show: Boolean) {
+        exitFullscreenMode()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+       /* var view = findViewById<View>(android.R.id.content)
+        view.requestFocus();*/
+        var view = getJitsiView();
+        if (show) {
+            if (!imm.isAcceptingText()) {
+                // Show keyboard
+                imm.showSoftInput(window.decorView.rootView, 0)
+            }
+        } else {
+            if (imm.isAcceptingText()) {
+                // Hide keyboard
+                imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+            }
+        }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        // Pass all touch events to the underlying activity or view.
+        return false
     }
 
     private fun onBroadcastReceived(intent: Intent?) {
@@ -81,20 +118,54 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
             if (intent!!.getAction() == "org.jitsi.meet.setSizeAndPosition") {
                 val width = intent.getExtras()!!.getInt("width");
                 val height = intent.getExtras()!!.getInt("height");
-                val left = intent.getExtras()!!.getInt("left");
-                val top = intent.getExtras()!!.getInt("top");
-                var layoutParams = window.getAttributes();
+                val right = intent.getExtras()!!.getInt("right");
+                val bottom = intent.getExtras()!!.getInt("bottom");
+                val layoutParams = window.attributes;
                 // Here, you can change the width and height to your desired values
-                layoutParams.width = width;  // in pixels
-                layoutParams.height = height; // in pixels
-
-                if (left != null && top != null) {
-                    layoutParams.gravity = Gravity.TOP or Gravity.LEFT
-                    layoutParams.x = left
-                    layoutParams.y = top
+                if (width != null && height != null) {
+                    layoutParams.width = width;  // in pixels
+                    layoutParams.height = height; // in pixels
                 }
 
-                window.setAttributes(layoutParams);
+                if (right != null && bottom != null) {
+                    layoutParams.gravity = Gravity.BOTTOM or Gravity.RIGHT
+                    layoutParams.x = right
+                    layoutParams.y = bottom
+                }
+
+                window.attributes = layoutParams;
+                return
+            }
+
+            if (intent.getAction() == "org.jitsi.meet.toggleKeyboard") {
+                toggleKeyboard(intent.getExtras()!!.getBoolean("enabled"))
+                return
+            }
+            if (intent.getAction() == "org.jitsi.meet.PIP") {
+                if (intent.getExtras()!!.getBoolean("enabled")) {
+                    if(!isInPictureInPictureMode) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            val pipBuilder = PictureInPictureParams.Builder()
+                            pipBuilder.setActions(emptyList());
+                            enterPictureInPictureMode(pipBuilder.build());
+                        } else {
+                            enterPictureInPictureMode()
+                        }
+                    }
+                } else {
+                    print("Exit from pip mode somehow...")
+                    val startIntent = Intent(this@JitsiMeetWrapperActivity, JitsiMeetWrapperActivity::class.java)
+                    startIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    this.startActivity(startIntent)
+                }
+                // Note that we're not calling pipBuilder.setActions(...) here,
+                // so no action buttons will be shown in the PiP window
+
+
+                // Note that we're not calling pipBuilder.setActions(...) here,
+                // so no action buttons will be shown in the PiP window
+
+
                 return
             }
             val event = BroadcastEvent(intent)
@@ -114,6 +185,27 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
                 BroadcastEvent.Type.VIDEO_MUTED_CHANGED -> eventStreamHandler.onVideoMutedChanged(data)
                 BroadcastEvent.Type.READY_TO_CLOSE -> {}
             }
+        }
+    }
+
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        if(isInPictureInPictureMode) {
+            val layoutParams = window.attributes;
+            layoutParams.width = -2;  // in pixels
+            layoutParams.height = -2; // in pixels
+            layoutParams.gravity = Gravity.TOP or Gravity.LEFT
+            layoutParams.x = 0
+            layoutParams.y = 0
+            window.attributes = layoutParams;
+        } else {
+            val layoutParams = window.attributes;
+            layoutParams.width = 200;  // in pixels
+            layoutParams.height = 200; // in pixels
+            layoutParams.gravity = Gravity.BOTTOM or Gravity.RIGHT
+            layoutParams.x = 100
+            layoutParams.y = 200
+            window.attributes = layoutParams;
         }
     }
 

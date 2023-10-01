@@ -39,6 +39,7 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "hangUp" -> hangUp(call, result)
             "pip" -> pip(call, result)
             "setSizeAndPosition" -> setSizeAndPosition(call, result)
+            "toggleKeyboard" -> toggleKeyboard(call, result)
             else -> result.notImplemented()
         }
     }
@@ -61,20 +62,31 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         result.success("Successfully set pip mode: $enabled")
     }
 
+    private fun toggleKeyboard(call: MethodCall, result: Result) {
+        val enabled = call.argument<Boolean>("enabled") ?: false
+
+        val muteBroadcastIntent = Intent("org.jitsi.meet.toggleKeyboard")
+        muteBroadcastIntent.putExtra("enabled", enabled)
+        LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
+        result.success("Successfully toggleKeyboard: $enabled")
+    }
+
+
+
     private fun setSizeAndPosition(call: MethodCall, result: Result) {
         val width = call.argument<Int>("width") ?: 0
         val height = call.argument<Int>("height") ?: 0
-        val top = call.argument<Int>("top")
-        val left = call.argument<Int>("left")
+        val bottom = call.argument<Int>("bottom")
+        val right = call.argument<Int>("right")
 
         val muteBroadcastIntent = Intent("org.jitsi.meet.setSizeAndPosition")
         muteBroadcastIntent.putExtra("width", width)
         muteBroadcastIntent.putExtra("height", height)
-        if (top != null) {
-            muteBroadcastIntent.putExtra("top", top!!)
+        if (bottom != null) {
+            muteBroadcastIntent.putExtra("bottom", bottom!!)
         }
-        if (left != null) {
-            muteBroadcastIntent.putExtra("left", left!!)
+        if (right != null) {
+            muteBroadcastIntent.putExtra("right", right!!)
         }
         LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
         result.success("Successfully set size and position")

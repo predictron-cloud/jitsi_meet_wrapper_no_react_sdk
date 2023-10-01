@@ -40,7 +40,11 @@ class JitsiMeetWrapper {
     return await JitsiMeetWrapperPlatformInterface.instance.pip(enabled);
   }
 
-  static Future<JitsiMeetingResponse> setSizeAndPosition(int width, int height, int left, int top) async {
-    return await JitsiMeetWrapperPlatformInterface.instance.setSizeAndPosition(width, height, left, top);
+  static Future<JitsiMeetingResponse> setSizeAndPosition(int width, int height, int right, int bottom) async {
+    return await JitsiMeetWrapperPlatformInterface.instance.setSizeAndPosition(width, height, right, bottom);
+  }
+
+  static Future<JitsiMeetingResponse> toggleKeyboard(bool enabled) async {
+    return await JitsiMeetWrapperPlatformInterface.instance.toggleKeyboard(enabled);
   }
 }

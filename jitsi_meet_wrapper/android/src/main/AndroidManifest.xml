@@ -6,7 +6,7 @@
         <!--android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"-->
         <activity
             android:name="dev.saibotma.jitsi_meet_wrapper.JitsiMeetWrapperActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"
             android:supportsPictureInPicture="true"
             android:launchMode="singleTask"
             android:theme="@style/TransparentActivity"
