@@ -48,9 +48,7 @@ class JitsiMeetWrapperViewController: UIViewController {
         // From: https://stackoverflow.com/a/45860445/6172447
         sourceJitsiMeetView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        jitsiMeetView.frame = CGRect(x: 100, y: 120, width: 400, height: 600)
-
-        sourceJitsiMeetView!.frame = CGRect(x: 0, y: 0, width: 200, height: 300)
+        sourceJitsiMeetView!.frame = CGRect(x: 100, y: 150, width: view.bounds.width - 200, height: view.bounds.height - 400)
 
         sourceJitsiMeetView!.delegate = self
         sourceJitsiMeetView!.join(options)
@@ -68,10 +66,6 @@ class JitsiMeetWrapperViewController: UIViewController {
         jitsiMeetView.alpha = 0
         pipViewCoordinator?.show()
 
-        print("Frame after setting:", jitsiMeetView.frame)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            print("Frame after 1 second:", jitsiMeetView.frame)
-        }
 
     }
 
