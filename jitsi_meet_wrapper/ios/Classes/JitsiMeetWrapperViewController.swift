@@ -52,8 +52,6 @@ class JitsiMeetWrapperViewController: UIViewController {
 
         sourceJitsiMeetView!.frame = CGRect(x: 0, y: 0, width: 200, height: 300)
 
-        view.addSubview(jitsiMeetView)
-
         sourceJitsiMeetView!.delegate = self
         sourceJitsiMeetView!.join(options)
 
@@ -63,7 +61,7 @@ class JitsiMeetWrapperViewController: UIViewController {
         // Enable jitsimeet view to be a view that can be displayed
         // on top of all the things, and let the coordinator to manage
         // the view state and interactions
-        //pipViewCoordinator = PiPViewCoordinator(withView: jitsiMeetView)
+        pipViewCoordinator = PiPViewCoordinator(withView: jitsiMeetView)
         pipViewCoordinator?.configureAsStickyView(withParentView: view)
 
         // animate in
@@ -71,8 +69,13 @@ class JitsiMeetWrapperViewController: UIViewController {
         pipViewCoordinator?.show()
 
         print("Frame after setting:", jitsiMeetView.frame)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             print("Frame after 1 second:", jitsiMeetView.frame)
+        }
+
+        print("Frame after setting:", sourceJitsiMeetView.frame)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                print("Frame after 1 second:", sourceJitsiMeetView.frame)
         }
 
     }
