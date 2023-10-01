@@ -42,9 +42,6 @@ class JitsiMeetWrapperViewController: UIViewController {
         jitsiMeetView.backgroundColor = .black
         self.jitsiMeetView = jitsiMeetView
 
-        jitsiMeetView.translatesAutoresizingMaskIntoConstraints = true
-        jitsiMeetView.removeConstraints(jitsiMeetView.constraints)
-
         jitsiMeetView.addSubview(sourceJitsiMeetView!)
 
         // Make the jitsi view redraw when orientation changes.
@@ -67,7 +64,7 @@ class JitsiMeetWrapperViewController: UIViewController {
         // on top of all the things, and let the coordinator to manage
         // the view state and interactions
         //pipViewCoordinator = PiPViewCoordinator(withView: jitsiMeetView)
-        //pipViewCoordinator?.configureAsStickyView(withParentView: view)
+        pipViewCoordinator?.configureAsStickyView(withParentView: view)
 
         // animate in
         jitsiMeetView.alpha = 0
