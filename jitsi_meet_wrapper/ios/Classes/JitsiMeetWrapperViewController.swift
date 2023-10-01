@@ -171,15 +171,7 @@ extension JitsiMeetWrapperViewController: JitsiMeetViewDelegate {
 
 // This is based on https://github.com/flutter/flutter/issues/35784#issuecomment-516274701.
 class AbsorbPointersView: UIView {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
-
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
-
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
-
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
+       override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+           return false
+       }
 }
