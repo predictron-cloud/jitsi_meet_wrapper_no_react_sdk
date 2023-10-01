@@ -112,6 +112,18 @@ extension JitsiMeetWrapperViewController: JitsiMeetViewDelegate {
             self.pipViewCoordinator?.enterPictureInPicture()
         }
     }
+
+    func enterPictureInPicture() {
+        DispatchQueue.main.async {
+            self.pipViewCoordinator?.enterPictureInPicture()
+        }
+    }
+
+    func exitPictureInPicture() {
+        DispatchQueue.main.async {
+            self.pipViewCoordinator?.exitPictureInPicture()
+        }
+    }
     
     func participantJoined(_ data: [AnyHashable : Any]) {
         self.eventSink(["event": "participantJoined", "data": data])

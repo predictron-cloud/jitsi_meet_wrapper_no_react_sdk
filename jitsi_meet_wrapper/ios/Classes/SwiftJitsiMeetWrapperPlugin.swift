@@ -125,7 +125,7 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
         let arguments = call.arguments as! [String: Any]
         let enabled = arguments["enabled"] as? Bool ?? false
         if (enabled) {
-          jitsiViewController?.enterPicture()
+          jitsiViewController?.enterPictureInPicture()
         } else {
            jitsiViewController?.exitPictureInPicture()
         }
