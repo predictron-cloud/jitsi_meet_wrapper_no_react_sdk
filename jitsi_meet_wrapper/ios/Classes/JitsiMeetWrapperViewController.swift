@@ -39,7 +39,7 @@ class JitsiMeetWrapperViewController: UIViewController {
         // Need to wrap the jitsi view in another view that absorbs all the pointer events
         // because of a flutter bug: https://github.com/flutter/flutter/issues/14720
         let jitsiMeetView = AbsorbPointersView()
-        jitsiMeetView.backgroundColor = .black
+        jitsiMeetView.backgroundColor = .clear
         self.jitsiMeetView = jitsiMeetView
 
         jitsiMeetView.addSubview(sourceJitsiMeetView!)
