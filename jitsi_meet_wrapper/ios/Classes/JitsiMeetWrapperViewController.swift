@@ -73,11 +73,6 @@ class JitsiMeetWrapperViewController: UIViewController {
             print("Frame after 1 second:", jitsiMeetView.frame)
         }
 
-        print("Frame after setting:", sourceJitsiMeetView.frame)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                print("Frame after 1 second:", sourceJitsiMeetView.frame)
-        }
-
     }
 
     override func viewWillTransition(to size: CGSize,
