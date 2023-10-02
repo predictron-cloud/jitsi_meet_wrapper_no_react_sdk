@@ -268,7 +268,7 @@ class _MeetingState extends State<Meeting> {
         onClosed: () => debugPrint("onClosed"),
       ),
     );
-    JitsiMeetWrapper.setSizeAndPosition(300, 500, 20000, 30000);
+    JitsiMeetWrapper.setSizeAndPosition(200, 300, 100, 100);
   }
 
   Widget _buildTextField({

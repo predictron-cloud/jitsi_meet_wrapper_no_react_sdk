@@ -50,20 +50,12 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         val window = this.window
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
-        window.requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY)
-        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // Add the STATUS_BAR flag to show the status bar
-        window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setTitle("")
         super.onCreate(savedInstanceState)
         setTitle("")
         supportActionBar?.hide()
         registerForBroadcastMessages()
         eventStreamHandler.onOpened()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // Add the STATUS_BAR flag to show the status bar
-        window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 
         // Set as a translucent activity
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
