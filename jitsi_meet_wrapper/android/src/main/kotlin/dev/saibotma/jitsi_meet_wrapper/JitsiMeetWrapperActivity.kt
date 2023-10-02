@@ -23,6 +23,10 @@ import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 
 
 class JitsiMeetWrapperActivity : JitsiMeetActivity() {
+    private var width: Int = -2;
+    private var height: Int = -2;
+    private var right: Int = -2;
+    private var bottom: Int = -2;
     private val eventStreamHandler = JitsiMeetWrapperEventStreamHandler.instance
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -91,8 +95,8 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
     fun toggleKeyboard(show: Boolean) {
         exitFullscreenMode()
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-       /* var view = findViewById<View>(android.R.id.content)
-        view.requestFocus();*/
+        /* var view = findViewById<View>(android.R.id.content)
+         view.requestFocus();*/
         var view = getJitsiView();
         if (show) {
             if (!imm.isAcceptingText()) {
@@ -113,59 +117,21 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
     }
 
     private fun onBroadcastReceived(intent: Intent?) {
-        if (intent != null) {
-            // enterPictureInPictureMode()
-            if (intent!!.getAction() == "org.jitsi.meet.setSizeAndPosition") {
-                val width = intent.getExtras()!!.getInt("width");
-                val height = intent.getExtras()!!.getInt("height");
-                val right = intent.getExtras()!!.getInt("right");
-                val bottom = intent.getExtras()!!.getInt("bottom");
-                val layoutParams = window.attributes;
-                // Here, you can change the width and height to your desired values
-                if (width != null && height != null) {
-                    layoutParams.width = width;  // in pixels
-                    layoutParams.height = height; // in pixels
-                }
-
-                if (right != null && bottom != null) {
-                    layoutParams.gravity = Gravity.BOTTOM or Gravity.RIGHT
-                    layoutParams.x = right
-                    layoutParams.y = bottom
-                }
-
-                window.attributes = layoutParams;
+        if (intent == null) {
+            return
+        }
+        try {
+            if (intent.action == "org.jitsi.meet.setSizeAndPosition") {
+                setSizeAndPosition(intent)
                 return
             }
 
-            if (intent.getAction() == "org.jitsi.meet.toggleKeyboard") {
-                toggleKeyboard(intent.getExtras()!!.getBoolean("enabled"))
+            if (intent.action == "org.jitsi.meet.toggleKeyboard") {
+                toggleKeyboard(intent.extras!!.getBoolean("enabled"))
                 return
             }
-            if (intent.getAction() == "org.jitsi.meet.PIP") {
-                if (intent.getExtras()!!.getBoolean("enabled")) {
-                    if(!isInPictureInPictureMode) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            val pipBuilder = PictureInPictureParams.Builder()
-                            pipBuilder.setActions(emptyList());
-                            enterPictureInPictureMode(pipBuilder.build());
-                        } else {
-                            enterPictureInPictureMode()
-                        }
-                    }
-                } else {
-                    print("Exit from pip mode somehow...")
-                    val startIntent = Intent(this@JitsiMeetWrapperActivity, JitsiMeetWrapperActivity::class.java)
-                    startIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    this.startActivity(startIntent)
-                }
-                // Note that we're not calling pipBuilder.setActions(...) here,
-                // so no action buttons will be shown in the PiP window
-
-
-                // Note that we're not calling pipBuilder.setActions(...) here,
-                // so no action buttons will be shown in the PiP window
-
-
+            if (intent.action == "org.jitsi.meet.PIP") {
+                enterPip(intent.extras!!.getBoolean("enabled"))
                 return
             }
             val event = BroadcastEvent(intent)
@@ -185,28 +151,68 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
                 BroadcastEvent.Type.VIDEO_MUTED_CHANGED -> eventStreamHandler.onVideoMutedChanged(data)
                 BroadcastEvent.Type.READY_TO_CLOSE -> {}
             }
+        } catch (e: Exception) {
+            print("Exception ${e.cause}, stacktrace: ${e.stackTrace}");
         }
     }
 
+    private fun enterPip(enabled: Boolean) {
+        if (enabled) {
+            if (!isInPictureInPictureMode) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val pipBuilder = PictureInPictureParams.Builder()
+                    pipBuilder.setActions(emptyList());
+                    enterPictureInPictureMode(pipBuilder.build());
+                } else {
+                    enterPictureInPictureMode()
+                }
+            }
+        } else {
+            print("Exit from pip mode somehow...")
+            val startIntent = Intent(this@JitsiMeetWrapperActivity, JitsiMeetWrapperActivity::class.java)
+            startIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            this.startActivity(startIntent)
+        }
+    }
+
+    private fun setSizeAndPosition(intent: Intent) {
+        width = intent.getExtras()!!.getInt("width");
+        height = intent.getExtras()!!.getInt("height");
+        right = intent.getExtras()!!.getInt("right");
+        bottom = intent.getExtras()!!.getInt("bottom");
+        val layoutParams = window.attributes;
+        // Here, you can change the width and height to your desired values
+        if (width != null && height != null) {
+            layoutParams.width = width;  // in pixels
+            layoutParams.height = height; // in pixels
+        }
+
+        if (right != null && bottom != null) {
+            layoutParams.gravity = Gravity.BOTTOM or Gravity.RIGHT
+            layoutParams.x = right
+            layoutParams.y = bottom
+        }
+
+        window.attributes = layoutParams;
+    }
+
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
-        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
-        if(isInPictureInPictureMode) {
+        if (isInPictureInPictureMode) {
             val layoutParams = window.attributes;
             layoutParams.width = -2;  // in pixels
             layoutParams.height = -2; // in pixels
-            layoutParams.gravity = Gravity.TOP or Gravity.LEFT
             layoutParams.x = 0
             layoutParams.y = 0
             window.attributes = layoutParams;
         } else {
             val layoutParams = window.attributes;
-            layoutParams.width = 200;  // in pixels
-            layoutParams.height = 200; // in pixels
-            layoutParams.gravity = Gravity.BOTTOM or Gravity.RIGHT
-            layoutParams.x = 100
-            layoutParams.y = 200
+            layoutParams.width = width;  // in pixels
+            layoutParams.height = height; // in pixels
+            layoutParams.x = right
+            layoutParams.y = bottom
             window.attributes = layoutParams;
         }
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
     }
 
     override fun onDestroy() {

@@ -5,11 +5,12 @@
     android:focusableInTouchMode="false"
     android:background="@android:color/transparent"
     android:layout_width="match_parent"
-    android:maxHeight="450dp"
+    android:layout_gravity="bottom|right"
     android:layout_height="match_parent">
 
         <org.jitsi.meet.sdk.JitsiMeetView
             android:focusable="false"
+            android:layout_gravity="bottom|right"
             android:focusableInTouchMode="false"
             android:id="@+id/jitsiView"
             android:layout_width="match_parent"
