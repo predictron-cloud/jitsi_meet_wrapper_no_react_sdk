@@ -221,7 +221,9 @@ class _MeetingState extends State<Meeting> {
     await JitsiMeetWrapper.joinMeeting(
       options: options,
       listener: JitsiMeetingListener(
-        onOpened: () => debugPrint("onOpened"),
+        onOpened: () async => {
+          await JitsiMeetWrapper.setSizeAndPosition(200, 300, 100, 100)
+        },
         onConferenceWillJoin: (url) {
           debugPrint("onConferenceWillJoin: url: $url");
         },
@@ -268,7 +270,6 @@ class _MeetingState extends State<Meeting> {
         onClosed: () => debugPrint("onClosed"),
       ),
     );
-    JitsiMeetWrapper.setSizeAndPosition(200, 300, 100, 100);
   }
 
   Widget _buildTextField({

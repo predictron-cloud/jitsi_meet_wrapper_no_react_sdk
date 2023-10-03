@@ -50,23 +50,16 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         val window = this.window
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
-        setTitle("")
         super.onCreate(savedInstanceState)
-        setTitle("")
+        if (supportActionBar != null) {
+            supportActionBar!!.hide();
+        }
         supportActionBar?.hide()
         registerForBroadcastMessages()
         eventStreamHandler.onOpened()
 
-        // Set as a translucent activity
         window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         window.decorView.setBackgroundResource(android.R.color.transparent)
-    }
-
-    private fun exitFullscreenMode() {
-        val window: Window = getWindow()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
-
     }
 
     override fun onBackPressed() {
@@ -84,8 +77,7 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         LocalBroadcastManager.getInstance(this).registerReceiver(this.broadcastReceiver, intentFilter)
     }
 
-    fun toggleKeyboard(show: Boolean) {
-        exitFullscreenMode()
+    private fun toggleKeyboard(show: Boolean) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         /* var view = findViewById<View>(android.R.id.content)
          view.requestFocus();*/
@@ -114,7 +106,10 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         }
         try {
             if (intent.action == "org.jitsi.meet.setSizeAndPosition") {
-                setSizeAndPosition(intent)
+                setSizeAndPosition(intent.getExtras()!!.getInt("width"),
+                        intent.getExtras()!!.getInt("height"),
+                        intent.getExtras()!!.getInt("right"),
+                        intent.getExtras()!!.getInt("bottom"))
                 return
             }
 
@@ -167,11 +162,11 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         }
     }
 
-    private fun setSizeAndPosition(intent: Intent) {
-        width = intent.getExtras()!!.getInt("width");
-        height = intent.getExtras()!!.getInt("height");
-        right = intent.getExtras()!!.getInt("right");
-        bottom = intent.getExtras()!!.getInt("bottom");
+    private fun setSizeAndPosition(width: Int, height: Int, right: Int, bottom: Int) {
+        this.width = width;
+        this.height = height;
+        this.right = right;
+        this.bottom = bottom;
         val layoutParams = window.attributes;
         // Here, you can change the width and height to your desired values
         if (width != null && height != null) {
@@ -190,6 +185,7 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
         if (isInPictureInPictureMode) {
+            print("Enter pipppp:" + newConfig!!.screenHeightDp + ", " + newConfig.screenHeightDp)
             val layoutParams = window.attributes;
             layoutParams.width = -2;  // in pixels
             layoutParams.height = -2; // in pixels
@@ -197,6 +193,7 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
             layoutParams.y = 0
             window.attributes = layoutParams;
         } else {
+            print("exit pip:" + newConfig!!.screenHeightDp + ", " + newConfig.screenHeightDp)
             val layoutParams = window.attributes;
             layoutParams.width = width;  // in pixels
             layoutParams.height = height; // in pixels
