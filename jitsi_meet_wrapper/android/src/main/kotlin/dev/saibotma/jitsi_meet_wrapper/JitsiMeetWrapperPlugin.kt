@@ -40,6 +40,7 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "pip" -> pip(call, result)
             "setSizeAndPosition" -> setSizeAndPosition(call, result)
             "toggleKeyboard" -> toggleKeyboard(call, result)
+            "toggleCamera" -> toggleCamera(call, result)
             else -> result.notImplemented()
         }
     }
@@ -52,6 +53,7 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         result.success("Successfully set audio muted to: $isMuted")
     }
+
 
     private fun pip(call: MethodCall, result: Result) {
         val enabled = call.argument<Boolean>("enabled") ?: false
@@ -97,6 +99,13 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(hangUpIntent)
 
         result.success("Successfully hung up.")
+    }
+
+    private fun toggleCamera(call: MethodCall, result: Result) {
+        val hangUpIntent: Intent = BroadcastIntentHelper.buildToggleCameraIntent()
+        LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(hangUpIntent)
+
+        result.success("Successfully toggled camera.")
     }
 
     private fun joinMeeting(call: MethodCall, result: Result) {

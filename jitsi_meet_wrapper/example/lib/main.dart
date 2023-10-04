@@ -144,6 +144,17 @@ class _MeetingState extends State<Meeting> {
                   MaterialStateColor.resolveWith((states) => Colors.blue),
                 ),
               ),
+              ElevatedButton(
+                onPressed: () => {JitsiMeetWrapper.toggleCamera()},
+                child: const Text(
+                  "Toggle Camera",
+                  style: TextStyle(color: Colors.white),
+                ),
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateColor.resolveWith((states) => Colors.blue),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 48.0),
@@ -160,9 +171,9 @@ class _MeetingState extends State<Meeting> {
 
   _onAudioMutedChanged(bool? value) {
     if(value == true) {
-      JitsiMeetWrapper.setSizeAndPosition(100, 200, 200000, 3000000);
+      JitsiMeetWrapper.setSizeAndPosition(100, 200, 20, 20);
     } else {
-      JitsiMeetWrapper.setSizeAndPosition(700, 700, 150, 100);
+      JitsiMeetWrapper.setSizeAndPosition(800, 1300, 150, 100);
     }
     print('audio!!!!');
 
@@ -190,7 +201,7 @@ class _MeetingState extends State<Meeting> {
       'meeting-name.enabled': false,
       'security-options.enabled': false,
       'tile-view.enabled': false,
-      'toolbox.enabled': false,
+      'toolbox.enabled': true,
       'speakerstats.enabled': false,
       'android.screensharing.enabled': false,
       'live-streaming.enabled': false,
@@ -215,6 +226,18 @@ class _MeetingState extends State<Meeting> {
       userDisplayName: userDisplayNameText.text,
       userEmail: userEmailText.text,
       featureFlags: featureFlags,
+      configOverrides: {
+        'defaultLanguage': 'ru',
+        'subject': 'lalalala',
+        'hideConferenceSubject': false,
+        'hideConferenceTimer': false,
+        'toolbarButtons': ['microphone', 'camera'],
+        'TOOLBAR_BUTTONS': ['microphone', 'camera'],
+        'MAIN_TOOLBAR_BUTTONS': ['microphone', 'camera'],
+        'BUTTONS_WITH_NOTIFY_CLICK': ['microphone', 'camera'],
+        'buttonsWithNotifyClick': ['microphone', 'camera'],
+        'customToolbarButtons': ['microphone', 'camera'],
+      }
     );
 
     debugPrint("JitsiMeetingOptions: $options");

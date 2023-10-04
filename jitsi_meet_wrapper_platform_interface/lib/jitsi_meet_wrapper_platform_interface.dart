@@ -47,6 +47,10 @@ abstract class JitsiMeetWrapperPlatformInterface extends PlatformInterface {
     throw UnimplementedError('setSizeAndPosition has not been implemented.');
   }
 
+  Future<JitsiMeetingResponse> toggleCamera() async {
+    throw UnimplementedError('setSizeAndPosition has not been implemented.');
+  }
+
   Future<JitsiMeetingResponse> toggleKeyboard(bool enabled) async {
     throw UnimplementedError('setSizeAndPosition has not been implemented.');
   }

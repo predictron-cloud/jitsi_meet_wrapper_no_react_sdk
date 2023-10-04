@@ -83,6 +83,19 @@ class MethodChannelJitsiMeetWrapper extends JitsiMeetWrapperPlatformInterface {
   }
 
   @override
+  Future<JitsiMeetingResponse> toggleCamera() async {
+    return await _methodChannel.invokeMethod<String>('toggleCamera').then((message) {
+      return JitsiMeetingResponse(isSuccess: true, message: message);
+    }).catchError((error) {
+      return JitsiMeetingResponse(
+        isSuccess: false,
+        message: error.toString(),
+        error: error,
+      );
+    });
+  }
+
+  @override
   Future<JitsiMeetingResponse> pip(bool enabled) async {
     Map<String, dynamic> _options = {
       'enabled': enabled,

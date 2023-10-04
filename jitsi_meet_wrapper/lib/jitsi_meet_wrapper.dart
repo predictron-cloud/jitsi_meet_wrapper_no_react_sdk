@@ -36,6 +36,10 @@ class JitsiMeetWrapper {
     return await JitsiMeetWrapperPlatformInterface.instance.hangUp();
   }
 
+  static Future<JitsiMeetingResponse> toggleCamera() async {
+    return await JitsiMeetWrapperPlatformInterface.instance.toggleCamera();
+  }
+
   static Future<JitsiMeetingResponse> pip(bool enabled) async {
     return await JitsiMeetWrapperPlatformInterface.instance.pip(enabled);
   }
