@@ -33,6 +33,9 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
         } else if (call.method == "hangUp") {
             hangUp(call, result: result)
             return
+        } else if (call.method == "toggleCamera") {
+            toggleCamera(call, result: result)
+            return
         } else if (call.method == "pip") {
             pip(call, result: result)
             return
@@ -118,9 +121,16 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
     }
 
     private func hangUp(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        print("Frame hangUp func:")
         jitsiViewController?.sourceJitsiMeetView?.hangUp()
         result(nil)
+    }
+
+    private fun toggleCamera(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        print("Frame toggleCamera func:")
+        val hangUpIntent: Intent = BroadcastIntentHelper.buildToggleCameraIntent()
+        LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(hangUpIntent)
+
+        result.success("Successfully toggled camera.")
     }
 
     private func pip(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
