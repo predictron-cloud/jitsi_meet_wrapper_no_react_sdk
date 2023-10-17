@@ -48,6 +48,7 @@ class JitsiMeetWrapperViewController: UIViewController {
         //sourceJitsiMeetView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         sourceJitsiMeetView!.frame = CGRect(x: 20, y: 100, width: view.frame.width - 40, height: view.frame.height - 250)
+        sourceJitsiMeetView.toggleCamera()
 
         print("Frame width:", view.bounds.width)
         print("Frame height:", view.bounds.height)
@@ -66,9 +67,7 @@ class JitsiMeetWrapperViewController: UIViewController {
 
         // animate in
         jitsiMeetView.alpha = 0
-        pipViewCoordinator?.show()
-
-
+//         pipViewCoordinator?.show()
     }
 
     override func viewWillTransition(to size: CGSize,
@@ -122,14 +121,12 @@ extension JitsiMeetWrapperViewController: JitsiMeetViewDelegate {
     }
 
     func enterPictureInPicture() {
-        print("Frame enterPictureInPicture func:")
         DispatchQueue.main.async {
             self.pipViewCoordinator?.enterPictureInPicture()
         }
     }
 
     func exitPictureInPicture() {
-        print("Frame exitPictureInPicture func:")
         DispatchQueue.main.async {
             self.pipViewCoordinator?.exitPictureInPicture()
         }
