@@ -48,7 +48,6 @@ class JitsiMeetWrapperViewController: UIViewController {
         //sourceJitsiMeetView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
         sourceJitsiMeetView!.frame = CGRect(x: 20, y: 100, width: view.frame.width - 40, height: view.frame.height - 250)
-        sourceJitsiMeetView.toggleCamera()
 
         print("Frame width:", view.bounds.width)
         print("Frame height:", view.bounds.height)
