@@ -122,12 +122,14 @@ extension JitsiMeetWrapperViewController: JitsiMeetViewDelegate {
     }
 
     func enterPictureInPicture() {
+        print("Frame enterPictureInPicture func:")
         DispatchQueue.main.async {
             self.pipViewCoordinator?.enterPictureInPicture()
         }
     }
 
     func exitPictureInPicture() {
+        print("Frame exitPictureInPicture func:")
         DispatchQueue.main.async {
             self.pipViewCoordinator?.exitPictureInPicture()
         }

@@ -23,6 +23,7 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        print("Frame handle func:", call.method)
         if (call.method == "joinMeeting") {
             joinMeeting(call, result: result)
             return
@@ -117,11 +118,13 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
     }
 
     private func hangUp(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        print("Frame hangUp func:")
         jitsiViewController?.sourceJitsiMeetView?.hangUp()
         result(nil)
     }
 
     private func pip(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        print("Frame pip func:")
         let arguments = call.arguments as! [String: Any]
         let enabled = arguments["enabled"] as? Bool ?? false
 
