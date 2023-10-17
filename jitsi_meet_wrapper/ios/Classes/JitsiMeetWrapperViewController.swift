@@ -32,7 +32,6 @@ class JitsiMeetWrapperViewController: UIViewController {
     }
 
     func openJitsiMeet() {
-        cleanUp()
 
         sourceJitsiMeetView = JitsiMeetView()
 
@@ -97,7 +96,6 @@ extension JitsiMeetWrapperViewController: JitsiMeetViewDelegate {
     func ready(toClose data: [AnyHashable : Any]) {
         DispatchQueue.main.async {
             self.pipViewCoordinator?.hide { _ in
-                self.cleanUp()
                 self.dismiss(animated: true, completion: nil)
             }
         }
