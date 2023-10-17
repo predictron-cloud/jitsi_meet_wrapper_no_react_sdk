@@ -34,7 +34,7 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
             hangUp(call, result: result)
             return
         } else if (call.method == "pip") {
-            hangUp(call, result: result)
+            pip(call, result: result)
             return
         }
     }
