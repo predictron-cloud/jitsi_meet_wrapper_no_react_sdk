@@ -124,11 +124,14 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
     private func pip(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let arguments = call.arguments as! [String: Any]
         let enabled = arguments["enabled"] as? Bool ?? false
+
+        print("Frame pip arg enabled:", enabled)
         if (enabled) {
           jitsiViewController?.enterPictureInPicture()
         } else {
            jitsiViewController?.exitPictureInPicture()
         }
+        print("Frame pip end:")
         result(nil)
     }
 
