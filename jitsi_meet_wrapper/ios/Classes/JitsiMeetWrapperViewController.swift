@@ -66,7 +66,7 @@ class JitsiMeetWrapperViewController: UIViewController {
 
         // animate in
         jitsiMeetView.alpha = 0
-//         pipViewCoordinator?.show()
+        pipViewCoordinator?.show()
     }
 
     override func viewWillTransition(to size: CGSize,
