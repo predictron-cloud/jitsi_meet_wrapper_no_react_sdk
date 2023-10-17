@@ -1,10 +1,7 @@
 package dev.saibotma.jitsi_meet_wrapper
 
 import android.app.Activity
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import androidx.annotation.NonNull
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
@@ -43,6 +40,10 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             "joinMeeting" -> joinMeeting(call, result)
             "setAudioMuted" -> setAudioMuted(call, result)
             "hangUp" -> hangUp(call, result)
+            "pip" -> pip(call, result)
+            "setSizeAndPosition" -> setSizeAndPosition(call, result)
+            "toggleKeyboard" -> toggleKeyboard(call, result)
+            "toggleCamera" -> toggleCamera(call, result)
             else -> result.notImplemented()
         }
     }
@@ -56,11 +57,58 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         result.success("Successfully set audio muted to: $isMuted")
     }
 
+
+    private fun pip(call: MethodCall, result: Result) {
+        val enabled = call.argument<Boolean>("enabled") ?: false
+
+        val muteBroadcastIntent = Intent("org.jitsi.meet.PIP")
+        muteBroadcastIntent.putExtra("enabled", enabled)
+        LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
+        result.success("Successfully set pip mode: $enabled")
+    }
+
+    private fun toggleKeyboard(call: MethodCall, result: Result) {
+        val enabled = call.argument<Boolean>("enabled") ?: false
+
+        val muteBroadcastIntent = Intent("org.jitsi.meet.toggleKeyboard")
+        muteBroadcastIntent.putExtra("enabled", enabled)
+        LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
+        result.success("Successfully toggleKeyboard: $enabled")
+    }
+
+
+
+    private fun setSizeAndPosition(call: MethodCall, result: Result) {
+        val width = call.argument<Int>("width") ?: 0
+        val height = call.argument<Int>("height") ?: 0
+        val bottom = call.argument<Int>("bottom")
+        val right = call.argument<Int>("right")
+
+        val muteBroadcastIntent = Intent("org.jitsi.meet.setSizeAndPosition")
+        muteBroadcastIntent.putExtra("width", width)
+        muteBroadcastIntent.putExtra("height", height)
+        if (bottom != null) {
+            muteBroadcastIntent.putExtra("bottom", bottom!!)
+        }
+        if (right != null) {
+            muteBroadcastIntent.putExtra("right", right!!)
+        }
+        LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(muteBroadcastIntent)
+        result.success("Successfully set size and position")
+    }
+
     private fun hangUp(call: MethodCall, result: Result) {
         val hangUpIntent: Intent = BroadcastIntentHelper.buildHangUpIntent()
         LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(hangUpIntent)
 
         result.success("Successfully hung up.")
+    }
+
+    private fun toggleCamera(call: MethodCall, result: Result) {
+        val hangUpIntent: Intent = BroadcastIntentHelper.buildToggleCameraIntent()
+        LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(hangUpIntent)
+
+        result.success("Successfully toggled camera.")
     }
 
     private fun joinMeeting(call: MethodCall, result: Result) {
@@ -112,8 +160,8 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                 // Can only be bool, int or string according to
                 // the overloads of setFeatureFlag.
                 when (value) {
-                    is Boolean -> setFeatureFlag(key, value)
-                    is Int -> setFeatureFlag(key, value)
+                    is Boolean -> setFeatureFlag(key, value as Boolean)
+                    is Int -> setFeatureFlag(key, value as Int)
                     else -> setFeatureFlag(key, value.toString())
                 }
             }
@@ -122,9 +170,10 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             configOverrides?.forEach { (key, value) ->
                 // Can only be bool, int, array of strings or string according to
                 // the overloads of setConfigOverride.
+                print("configOverrides. k: $key, v:$value")
                 when (value) {
-                    is Boolean -> setConfigOverride(key, value)
-                    is Int -> setConfigOverride(key, value)
+                    is Boolean -> setConfigOverride(key, value as Boolean)
+                    is Int -> setConfigOverride(key, value as Int)
                     is Array<*> -> setConfigOverride(key, value as Array<out String>)
                     else -> setConfigOverride(key, value.toString())
                 }

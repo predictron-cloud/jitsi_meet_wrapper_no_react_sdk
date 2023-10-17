@@ -35,9 +35,7 @@ class MethodChannelJitsiMeetWrapper extends JitsiMeetWrapperPlatformInterface {
       'userEmail': options.userEmail,
       'userAvatarUrl': options.userAvatarUrl,
       'featureFlags': options.featureFlags,
-      'config': options.configOverrides,
       'configOverrides': options.configOverrides,
-      'configOverwrite': options.configOverrides,
     };
 
     return await _methodChannel
@@ -85,13 +83,73 @@ class MethodChannelJitsiMeetWrapper extends JitsiMeetWrapperPlatformInterface {
   }
 
   @override
-  Future<void> attachListener(
-    JitsiMeetingListener listener,
-    ) async {
-    _listener = listener;
-    if (!_eventChannelIsInitialized) {
-      _initialize();
-    }
+  Future<JitsiMeetingResponse> toggleCamera() async {
+    return await _methodChannel.invokeMethod<String>('toggleCamera').then((message) {
+      return JitsiMeetingResponse(isSuccess: true, message: message);
+    }).catchError((error) {
+      return JitsiMeetingResponse(
+        isSuccess: false,
+        message: error.toString(),
+        error: error,
+      );
+    });
+  }
+
+  @override
+  Future<JitsiMeetingResponse> pip(bool enabled) async {
+    Map<String, dynamic> _options = {
+      'enabled': enabled,
+    };
+    return await _methodChannel
+        .invokeMethod<String>('pip', _options)
+        .then((message) {
+      return JitsiMeetingResponse(isSuccess: true, message: message);
+    }).catchError((error) {
+      return JitsiMeetingResponse(
+        isSuccess: false,
+        message: error.toString(),
+        error: error,
+      );
+    });
+  }
+
+  @override
+  Future<JitsiMeetingResponse> toggleKeyboard(bool enabled) async {
+    Map<String, dynamic> _options = {
+      'enabled': enabled,
+    };
+    return await _methodChannel
+        .invokeMethod<String>('toggleKeyboard', _options)
+        .then((message) {
+      return JitsiMeetingResponse(isSuccess: true, message: message);
+    }).catchError((error) {
+      return JitsiMeetingResponse(
+        isSuccess: false,
+        message: error.toString(),
+        error: error,
+      );
+    });
+  }
+
+  @override
+  Future<JitsiMeetingResponse> setSizeAndPosition(int width, int height, int right, int bottom) async {
+    Map<String, dynamic> _options = {
+      'width': width,
+      'height': height,
+      'right': right,
+      'bottom': bottom,
+    };
+    return await _methodChannel
+        .invokeMethod<String>('setSizeAndPosition', _options)
+        .then((message) {
+      return JitsiMeetingResponse(isSuccess: true, message: message);
+    }).catchError((error) {
+      return JitsiMeetingResponse(
+        isSuccess: false,
+        message: error.toString(),
+        error: error,
+      );
+    });
   }
 
   void _initialize() {

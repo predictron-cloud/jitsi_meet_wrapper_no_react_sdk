@@ -32,20 +32,25 @@ class JitsiMeetWrapperViewController: UIViewController {
     }
 
     func openJitsiMeet() {
-        cleanUp()
 
         sourceJitsiMeetView = JitsiMeetView()
+
         // Need to wrap the jitsi view in another view that absorbs all the pointer events
         // because of a flutter bug: https://github.com/flutter/flutter/issues/14720
         let jitsiMeetView = AbsorbPointersView()
-        jitsiMeetView.backgroundColor = .black
+        jitsiMeetView.backgroundColor = .clear
         self.jitsiMeetView = jitsiMeetView
 
         jitsiMeetView.addSubview(sourceJitsiMeetView!)
 
         // Make the jitsi view redraw when orientation changes.
         // From: https://stackoverflow.com/a/45860445/6172447
-        sourceJitsiMeetView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        //sourceJitsiMeetView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        sourceJitsiMeetView!.frame = CGRect(x: 20, y: 40, width: view.frame.width - 40, height: view.frame.height - 150)
+
+        print("Frame width:", view.bounds.width)
+        print("Frame height:", view.bounds.height)
 
         sourceJitsiMeetView!.delegate = self
         sourceJitsiMeetView!.join(options)
@@ -62,6 +67,8 @@ class JitsiMeetWrapperViewController: UIViewController {
         // animate in
         jitsiMeetView.alpha = 0
         pipViewCoordinator?.show()
+
+
     }
 
     override func viewWillTransition(to size: CGSize,
@@ -89,7 +96,6 @@ extension JitsiMeetWrapperViewController: JitsiMeetViewDelegate {
     func ready(toClose data: [AnyHashable : Any]) {
         DispatchQueue.main.async {
             self.pipViewCoordinator?.hide { _ in
-                self.cleanUp()
                 self.dismiss(animated: true, completion: nil)
             }
         }
@@ -110,6 +116,18 @@ extension JitsiMeetWrapperViewController: JitsiMeetViewDelegate {
     func enterPicture(inPicture data: [AnyHashable: Any]) {
         DispatchQueue.main.async {
             self.pipViewCoordinator?.enterPictureInPicture()
+        }
+    }
+
+    func enterPictureInPicture() {
+        DispatchQueue.main.async {
+            self.pipViewCoordinator?.enterPictureInPicture()
+        }
+    }
+
+    func exitPictureInPicture() {
+        DispatchQueue.main.async {
+            self.pipViewCoordinator?.exitPictureInPicture()
         }
     }
     
@@ -148,15 +166,7 @@ extension JitsiMeetWrapperViewController: JitsiMeetViewDelegate {
 
 // This is based on https://github.com/flutter/flutter/issues/35784#issuecomment-516274701.
 class AbsorbPointersView: UIView {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
-
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
-
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
-
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-    }
+       override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+           return false
+       }
 }

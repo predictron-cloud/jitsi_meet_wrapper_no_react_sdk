@@ -38,4 +38,20 @@ class JitsiMeetWrapper {
   static Future<JitsiMeetingResponse> hangUp() async {
     return await JitsiMeetWrapperPlatformInterface.instance.hangUp();
   }
+
+  static Future<JitsiMeetingResponse> toggleCamera() async {
+    return await JitsiMeetWrapperPlatformInterface.instance.toggleCamera();
+  }
+
+  static Future<JitsiMeetingResponse> pip(bool enabled) async {
+    return await JitsiMeetWrapperPlatformInterface.instance.pip(enabled);
+  }
+
+  static Future<JitsiMeetingResponse> setSizeAndPosition(int width, int height, int right, int bottom) async {
+    return await JitsiMeetWrapperPlatformInterface.instance.setSizeAndPosition(width, height, right, bottom);
+  }
+
+  static Future<JitsiMeetingResponse> toggleKeyboard(bool enabled) async {
+    return await JitsiMeetWrapperPlatformInterface.instance.toggleKeyboard(enabled);
+  }
 }

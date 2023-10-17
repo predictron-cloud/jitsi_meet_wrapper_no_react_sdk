@@ -34,6 +34,9 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
         } else if (call.method == "hangUp") {
             hangUp(call, result: result)
             return
+        } else if (call.method == "pip") {
+            hangUp(call, result: result)
+            return
         }
     }
 
@@ -117,6 +120,17 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
 
     private func hangUp(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         jitsiViewController?.sourceJitsiMeetView?.hangUp()
+        result(nil)
+    }
+
+    private func pip(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let arguments = call.arguments as! [String: Any]
+        let enabled = arguments["enabled"] as? Bool ?? false
+        if (enabled) {
+          jitsiViewController?.enterPictureInPicture()
+        } else {
+           jitsiViewController?.exitPictureInPicture()
+        }
         result(nil)
     }
 

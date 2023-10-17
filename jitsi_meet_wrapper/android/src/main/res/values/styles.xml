@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="TransparentActivity" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <!--<item name="android:background">@android:color/transparent</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <!--<item name="android:windowIsFloating">false</item>-->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="android:actionBarStyle">@style/MyActionBarStyle</item>
+    </style>
+
+    <style name="MyActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+</resources>
+

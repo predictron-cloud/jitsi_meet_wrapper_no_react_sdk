@@ -39,13 +39,24 @@ abstract class JitsiMeetWrapperPlatformInterface extends PlatformInterface {
     throw UnimplementedError('setAudioMuted has not been implemented.');
   }
 
+  Future<JitsiMeetingResponse> pip(bool enabled) async {
+    throw UnimplementedError('pip has not been implemented.');
+  }
+
+  Future<JitsiMeetingResponse> setSizeAndPosition(int width, int height, int right, int bottom) async {
+    throw UnimplementedError('setSizeAndPosition has not been implemented.');
+  }
+
+  Future<JitsiMeetingResponse> toggleCamera() async {
+    throw UnimplementedError('setSizeAndPosition has not been implemented.');
+  }
+
+  Future<JitsiMeetingResponse> toggleKeyboard(bool enabled) async {
+    throw UnimplementedError('setSizeAndPosition has not been implemented.');
+  }
+
   Future<JitsiMeetingResponse> hangUp() async {
     throw UnimplementedError('hangUp has not been implemented.');
   }
 
-  Future<void> attachListener(
-    JitsiMeetingListener listener,
-    ) async {
-    throw UnimplementedError('hangUp has not been implemented.');
-  }
 }
