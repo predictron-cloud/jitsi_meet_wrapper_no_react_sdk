@@ -16,7 +16,7 @@ A new Flutter project.
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   # Changelog: https://github.com/jitsi/jitsi-meet-release-notes/blob/master/CHANGELOG-MOBILE-SDKS.md
-  s.dependency 'JitsiMeetSDK', '8.1.2'
+  s.dependency 'JitsiMeetSDK', '8.4.0'
   s.platform = :ios, '8.0'
 
   # Flutter.framework does not contain a i386 slice.

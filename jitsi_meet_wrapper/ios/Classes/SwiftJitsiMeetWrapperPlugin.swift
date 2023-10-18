@@ -127,9 +127,7 @@ public class SwiftJitsiMeetWrapperPlugin: NSObject, FlutterPlugin, FlutterStream
 
     private func toggleCamera(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         print("Frame toggleCamera func:")
-//         val hangUpIntent: Intent = BroadcastIntentHelper.buildToggleCameraIntent()
-//         LocalBroadcastManager.getInstance(activity!!.applicationContext).sendBroadcast(hangUpIntent)
-
+        jitsiViewController?.sourceJitsiMeetView?.toggleCamera()
         result(nil)
     }
 
