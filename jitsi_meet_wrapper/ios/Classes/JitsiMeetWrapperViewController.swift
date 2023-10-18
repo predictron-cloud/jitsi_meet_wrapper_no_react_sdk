@@ -66,6 +66,10 @@ class JitsiMeetWrapperViewController: UIViewController {
 
         // animate in
         jitsiMeetView.alpha = 0
+        pipViewCoordinator.dragBoundInsets = UIEdgeInsets(top: 25,
+                                                                    left: 15,
+                                                                    bottom: 250,
+                                                                    right: 15)
         pipViewCoordinator?.show()
     }
 
