@@ -27,6 +27,7 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
     private var height: Int = -2;
     private var right: Int = -2;
     private var bottom: Int = -2;
+    private var pictureInPictureModeIsOn = false;
     private val eventStreamHandler = JitsiMeetWrapperEventStreamHandler.instance
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -50,7 +51,7 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         val window = this.window
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
-        super.onCreate(savedInstanceState)
+        super.onCreate(null)
         if (supportActionBar != null) {
             supportActionBar!!.hide();
         }
@@ -170,22 +171,29 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         this.right = right;
         this.bottom = bottom;
         val layoutParams = window.attributes;
-        // Here, you can change the width and height to your desired values
-        if (width != null && height != null) {
-            layoutParams.width = width;  // in pixels
-            layoutParams.height = height; // in pixels
-        }
-
-        if (right != null && bottom != null) {
-            layoutParams.gravity = Gravity.BOTTOM or Gravity.RIGHT
-            layoutParams.x = right
-            layoutParams.y = bottom
+        if (pictureInPictureModeIsOn) {
+            width = -2;  // in pixels
+            height = -2; // in pixels
+            right = 0
+            bottom = 0
+        } else {
+            // Here, you can change the width and height to your desired values
+            if (width != null && height != null) {
+                layoutParams.width = width;  // in pixels
+                layoutParams.height = height; // in pixels
+            }
+            if (right != null && bottom != null) {
+                layoutParams.gravity = Gravity.BOTTOM or Gravity.RIGHT
+                layoutParams.x = right
+                layoutParams.y = bottom
+            }
         }
 
         window.attributes = layoutParams;
     }
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
+        pictureInPictureModeIsOn = isInPictureInPictureMode;
         if (isInPictureInPictureMode) {
             print("Enter pipppp:" + newConfig!!.screenHeightDp + ", " + newConfig.screenHeightDp)
             val layoutParams = window.attributes;
