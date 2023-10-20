@@ -172,10 +172,10 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         this.bottom = bottom;
         val layoutParams = window.attributes;
         if (pictureInPictureModeIsOn) {
-            width = -2;  // in pixels
-            height = -2; // in pixels
-            right = 0
-            bottom = 0
+            layoutParams.width = -2;  // in pixels
+            layoutParams.height = -2; // in pixels
+            layoutParams.x = 0
+            layoutParams.y = 0
         } else {
             // Here, you can change the width and height to your desired values
             if (width != null && height != null) {
