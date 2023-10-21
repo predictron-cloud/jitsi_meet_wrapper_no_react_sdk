@@ -181,6 +181,7 @@ class JitsiMeetWrapperPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
         JitsiMeetWrapperActivity.launch(activity!!, options)
         result.success("Successfully joined room: $room")
+        activity!!.window.decorView.requestFocus()
     }
 
     override fun onDetachedFromActivity() {

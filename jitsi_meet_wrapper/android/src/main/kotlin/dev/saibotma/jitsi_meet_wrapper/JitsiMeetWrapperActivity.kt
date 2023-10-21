@@ -51,6 +51,7 @@ class JitsiMeetWrapperActivity : JitsiMeetActivity() {
         val window = this.window
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
         super.onCreate(null)
         if (supportActionBar != null) {
             supportActionBar!!.hide();

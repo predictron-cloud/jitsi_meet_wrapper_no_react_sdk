@@ -108,7 +108,7 @@ class _MeetingState extends State<Meeting> {
                 ),
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateColor.resolveWith((states) => Colors.blue),
+                  MaterialStateColor.resolveWith((states) => Colors.blue),
                 ),
               ),
               ElevatedButton(
@@ -123,7 +123,7 @@ class _MeetingState extends State<Meeting> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () => _onAudioMutedChanged(true),
+                onPressed: () => { JitsiMeetWrapper.pip(true)},
                 child: const Text(
                   "PIP",
                   style: TextStyle(color: Colors.white),
@@ -134,7 +134,7 @@ class _MeetingState extends State<Meeting> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () => _onAudioMutedChanged(false),
+                onPressed: () => { JitsiMeetWrapper.pip(false)},
                 child: const Text(
                   "Exit PIP",
                   style: TextStyle(color: Colors.white),
@@ -145,7 +145,7 @@ class _MeetingState extends State<Meeting> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () => {JitsiMeetWrapper.toggleCamera()},
+                onPressed: () => {JitsiMeetWrapper.toggleKeyboard(true)},
                 child: const Text(
                   "Toggle Camera",
                   style: TextStyle(color: Colors.white),
@@ -170,7 +170,7 @@ class _MeetingState extends State<Meeting> {
   }
 
   _onAudioMutedChanged(bool? value) {
-    if(value == true) {
+    if (value == true) {
       JitsiMeetWrapper.setSizeAndPosition(100, 200, 20, 20);
     } else {
       JitsiMeetWrapper.setSizeAndPosition(800, 1300, 150, 100);
@@ -189,9 +189,11 @@ class _MeetingState extends State<Meeting> {
   }
 
   _joinMeeting() async {
-    String? serverUrl = serverText.text.trim().isEmpty ? null : serverText.text;
+    String? serverUrl = serverText.text
+        .trim()
+        .isEmpty ? null : serverText.text;
 
-    Map<String, Object> featureFlags =  {
+    Map<String, Object> featureFlags = {
       'chat.enabled': false,
       'prejoinpage.enabled': false,
       'invite.enabled': false,
@@ -216,35 +218,36 @@ class _MeetingState extends State<Meeting> {
 
     // Define meetings options here
     var options = JitsiMeetingOptions(
-      roomNameOrUrl: roomText.text,
-      serverUrl: serverUrl,
-      subject: subjectText.text,
-      token: tokenText.text,
-      isAudioMuted: isAudioMuted,
-      isAudioOnly: isAudioOnly,
-      isVideoMuted: isVideoMuted,
-      userDisplayName: userDisplayNameText.text,
-      userEmail: userEmailText.text,
-      featureFlags: featureFlags,
-      configOverrides: {
-        'defaultLanguage': 'ru',
-        'subject': 'lalalala',
-        'hideConferenceSubject': false,
-        'hideConferenceTimer': false,
-        'toolbarButtons': ['microphone', 'camera'],
-        'TOOLBAR_BUTTONS': ['microphone', 'camera'],
-        'MAIN_TOOLBAR_BUTTONS': ['microphone', 'camera'],
-        'BUTTONS_WITH_NOTIFY_CLICK': ['microphone', 'camera'],
-        'buttonsWithNotifyClick': ['microphone', 'camera'],
-        'customToolbarButtons': ['microphone', 'camera'],
-      }
+        roomNameOrUrl: roomText.text,
+        serverUrl: serverUrl!,
+        subject: subjectText.text,
+        token: tokenText.text,
+        isAudioMuted: isAudioMuted,
+        isAudioOnly: isAudioOnly,
+        isVideoMuted: isVideoMuted,
+        userDisplayName: userDisplayNameText.text,
+        userEmail: userEmailText.text,
+        featureFlags: featureFlags,
+        configOverrides: {
+          'defaultLanguage': 'ru',
+          'subject': 'lalalala',
+          'hideConferenceSubject': false,
+          'hideConferenceTimer': false,
+          'toolbarButtons': ['microphone', 'camera'],
+          'TOOLBAR_BUTTONS': ['microphone', 'camera'],
+          'MAIN_TOOLBAR_BUTTONS': ['microphone', 'camera'],
+          'BUTTONS_WITH_NOTIFY_CLICK': ['microphone', 'camera'],
+          'buttonsWithNotifyClick': ['microphone', 'camera'],
+          'customToolbarButtons': ['microphone', 'camera'],
+        }
     );
 
     debugPrint("JitsiMeetingOptions: $options");
     await JitsiMeetWrapper.joinMeeting(
       options: options,
       listener: JitsiMeetingListener(
-        onOpened: () async => {
+        onOpened: () async =>
+        {
           await JitsiMeetWrapper.setSizeAndPosition(200, 300, 100, 100)
         },
         onConferenceWillJoin: (url) {
@@ -265,13 +268,13 @@ class _MeetingState extends State<Meeting> {
         onScreenShareToggled: (participantId, isSharing) {
           debugPrint(
             "onScreenShareToggled: participantId: $participantId, "
-            "isSharing: $isSharing",
+                "isSharing: $isSharing",
           );
         },
         onParticipantJoined: (email, name, role, participantId) {
           debugPrint(
             "onParticipantJoined: email: $email, name: $name, role: $role, "
-            "participantId: $participantId",
+                "participantId: $participantId",
           );
         },
         onParticipantLeft: (participantId) {
@@ -280,16 +283,17 @@ class _MeetingState extends State<Meeting> {
         onParticipantsInfoRetrieved: (participantsInfo, requestId) {
           debugPrint(
             "onParticipantsInfoRetrieved: participantsInfo: $participantsInfo, "
-            "requestId: $requestId",
+                "requestId: $requestId",
           );
         },
         onChatMessageReceived: (senderId, message, isPrivate) {
           debugPrint(
             "onChatMessageReceived: senderId: $senderId, message: $message, "
-            "isPrivate: $isPrivate",
+                "isPrivate: $isPrivate",
           );
         },
-        onChatToggled: (isOpen) => debugPrint("onChatToggled: isOpen: $isOpen"),
+        onChatToggled: (isOpen) =>
+            debugPrint("onChatToggled: isOpen: $isOpen"),
         onClosed: () => debugPrint("onClosed"),
       ),
     );
@@ -301,8 +305,6 @@ class _MeetingState extends State<Meeting> {
     String? hintText,
   }) {
     return TextField(
-      onTap: () => JitsiMeetWrapper.pip(true),
-      onEditingComplete: () => JitsiMeetWrapper.pip(false),
       controller: controller,
       decoration: InputDecoration(
           border: const OutlineInputBorder(),
